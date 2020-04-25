@@ -1,0 +1,16 @@
+---
+category: post
+title:  "Free Gantt App"
+date:   "2018-08-25"
+size: 4
+visible: 1
+---
+
+Wanna a gantt chart editor for free? Download for [Mac](https://github.com/daizeng1984/jQueryGantt/releases/download/HEAD/jQueryGantt-1.0.0.dmg) or [Centos](https://github.com/daizeng1984/jQueryGantt/releases/download/HEAD/jQueryGantt-1.0.0.x86_64.zip).
+
+# Findings
+I assume you know what's [Gantt](https://en.wikipedia.org/wiki/Gantt_chart) chart. [jQueryGantt](https://github.com/robicch/jQueryGantt) is an ancient pure front web app of Gantt chart that looks nice. It's also free, simple and quite easy to use. It'll be even nicer if it's native app. At first, I thought I could make a native app out of this pure frontend web app using [nativefier](https://github.com/jiahaog/nativefier). However, it seems not to work as I expected. It still connects to localhost server and cannot save frontend layout page which, in my understanding, is not *nativefied*. Plus, save/load is not functional. Ok, there's no magic for native and free app: we need to manually wrap it up into a fresh handmade [Electron](https://electronjs.org/) app with patience. Luckily Electron provides very smooth browser to desktop app (chrome based) migration. After moving [jquery](https://jquery.com/) etc. modules in `package.json`, everything almost works out of box. Nice!
+
+# Keep Fixing
+Even though not much migration work, some parts of the software doesn't work as advertised (buggy) e.g. adding new entry, endless recursion etc.. But since I have source code, I can just fix+use it and later distribute it using [electron.build](https://www.electron.build/). This distribution tool allow you to download and use for [free](https://github.com/daizeng1984/jQueryGantt/releases) 🙌!
+For developers, just directly clone [this](https://github.com/daizeng1984/jQueryGantt) repo and `npm start` your god mod.

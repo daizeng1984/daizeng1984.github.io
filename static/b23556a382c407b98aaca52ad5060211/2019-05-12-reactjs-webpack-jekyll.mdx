@@ -1,0 +1,131 @@
+---
+category: post
+title:  "Add Webpack to Jekyll"
+date:   "2019-05-12"
+size: 4
+visible: 1
+---
+
+(Obsolete: because of migration from Jekyll to Gatsby mdx, js in page will be much easier!).
+
+It's been on my TODO list for a while to put frontend framework into Jekyll
+
+import { CardGroup, Card, Container, Col, Row } from 'react-bootstrap';
+
+# Why
+Jekyll template is great but it's static multipage. Considering later I might post a few front end stuff (single page toy) in my blog with more new js and css to use, I guess it's time to move and organize every js/css to [Webpack](https://webpack.js.org/) and use some framework for frontend view. This work is the behind the scene: my website won't visually change much. However it did accelerate a bit cause Webpack could do some optimization like minimize. As frontend framework, [ReactJS](https://reactjs.org/) is [cool and hot](https://2018.stateofjs.com/front-end-frameworks/conclusion/), so it's not bad to use it for any frontend view related work.
+
+# Folder Structure
+Jeyll has its own structure, and we need to add webpack config and source atop. Just think a plain folder name and make it as separate as possible. Some examples from Google Search should be fine to follow: like [this](https://medium.com/@allizadrozny/using-webpack-and-react-with-jekyll-cfe137f8a2cc).
+
+# Webpack
+Webpack essentially do one job: bundle your assets including js, css, shaders, etc. and then it could nicely either inject your bundle assets into the html or you manually inject yourself. I like this tool better than [gulp](https://gulpjs.com/) etc. because it's so convenient with a lot of ready-to-use plugin and you don't need to do much more (like the feeling of Spring Boot). For React we just need to `npm install --save-dev` a bunch of packages from [Babel](https://babeljs.io/docs/en/) and it should work out of box too. However, setting up `webpack.config.js` and `package.json` takes some efforts e.g. to: find the name; solve dependencies issue; and figure out new version vs old version. Therefore, to help you if interested, I also dump them out here. First is the major part of our `package.json`:
+
+```javascript
+{
+  //...
+    
+  "scripts": {
+    "start": "concurrently \"./node_modules/.bin/webpack --watch\" \"bundle exec jekyll serve\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "./node_modules/.bin/webpack  --config webpack.prod.config.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "concurrently": "^4.1.0",
+    "css-loader": "^2.1.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^3.0.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "raw-loader": "^2.0.0",
+    "react": "^16.8.6",
+    "react-addons-update": "^15.6.2",
+    "react-dom": "^16.8.6",
+    "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2"
+  }
+  //...
+}
+```
+
+This config contains all the npm package to make webpack and reactjs lib dependency right including `concurrently` that runs webpack and jekyll simultaneously with the magic `"concurrently \"./node_modules/.bin/webpack --watch\" \"bundle exec jekyll serve\""`
+
+Second part is `webpack.config.js`:
+```javascript
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+module.exports = {
+    entry: "./webpack/js/main.js",
+    output: {
+        path: __dirname + '/assets/built',
+        filename: "bundle.js"
+    },
+    resolve: {
+        modules: [
+            path.resolve(__dirname),
+            path.resolve(__dirname + '/node_modules')
+        ]
+    },
+    module: {
+        rules: [
+            {
+                test: /\.jsx?$/,
+                exclude: /(node_modules)/,
+                use: {
+                    loader: "babel-loader"
+                }
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: "html-loader"
+                    }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                })
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader?name=assets/[name].[hash].[ext]'
+            },
+        ]
+    },
+    plugins: [
+        new ExtractTextPlugin({
+            filename: "style.css",
+            disable: process.env.NODE_ENV === "development"
+        })
+    ],
+    mode: 'development' 
+};
+```
+This configuration can pack your js into `bundle.js`, css into `style.css` and hash font name etc. as long as you `import` the files (js/css) in your entry js, which is `main.js` here in config file. Note here I removed the html templating but feel free to add it back for your application because right now I was actually using Jekyll's. Note if you need do multiple ReactJS projects like me you need to add entry point for each ReactJS project.
+
+So the following work is tediously importing things.
+
+# ReactJS
+What I like ReactJS is that it actually force you to think page in components and commuicate via Flux. This is benefitial and elegant when you have a lot of components to interact for users and unlike Angular which is now very `Java`, you got a lot easier to handle template's data binding.
+
+
+# Result
+So end up with this [TicTacToe](https://codepen.io/gaearon/pen/gWWZgR?editors=0010) below rendered by ReactJS! Thank you for reading to this far! I also didn't expect I could write about this work so much...
+
+<!-- <div id='react&#45;example'> -->
+<!-- </div> -->
+<!-- <link href="/assets/built/example&#45;style.css" rel="stylesheet"> -->
+<!-- <script type="text/javascript" src="/assets/built/example&#45;bundle.js" charset="utf&#45;8"></script> -->

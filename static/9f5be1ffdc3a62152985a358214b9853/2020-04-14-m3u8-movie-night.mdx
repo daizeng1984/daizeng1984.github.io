@@ -1,0 +1,33 @@
+---
+category: post
+title:  "Movie Night for m3u8"
+date:   "2020-04-14"
+size: 4
+visible: 1
+---
+
+There are a lot of movie night chat room, but none of them supports m3u8! Let me fix that...
+
+# Intros
+Why? A lot of great free resource is using `m3u8` for example [here](https://github.com/topics/m3u8-playlist) and under Shelter In Place orders, keeping social distance and watching these along with friends remotely is highly demanded!
+
+# Scope
+Users are mostly my UIowa Alumni friends (no more than 8 concurrent users). Scale is not issue at all even if we host on one single old machine. Heroku is free!
+
+
+# Quick Hack
+So my target is to finish it asap.
+
+After 30min search, I found [Vynchronize](https://github.com/kyle8998/Vynchronize) comes to my sight... Yeah, it's old js app likely 2008ish which means almost no common js framework and tooling. But you know, hacker doesn't care about that.
+
+If we have a player that can play the `m3u8` then we just need a bit adaptation for the player. Oh, luckily we just found one: [DPlayer](https://dplayer.js.org/guide.html)!
+
+Html5 player in this app is very similar to DPlayer interface wise. So for quick hack, I changed the `media` which is original html5 video object to dplayer object. The only difference of both interfaces are loading new video `switchVideo()` and `seek(time)`. This way, we keep the minimum code changes.
+
+After 1 hr's reading and writing, changes are done and movie is synchronized! Then just 10 min to deploy it as a Heroku app. I'm totally satisfied with the time spent on this today.
+
+Here's my mod [code](https://github.com/daizeng1984/Vynchronize), welcome to deploy it for your friends! If you do, don't forget to star it as well!
+
+
+![Vynchronize with m3u8](../images/blog/2020/synchronize-m3u8.png)
+

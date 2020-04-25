@@ -1,0 +1,19 @@
+---
+category: post
+title:  "PDFtk"
+date:   "2017-11-13"
+size: 4
+visible: 1
+---
+
+Feeling excited 🤓 to be able to find a magic trick for old MFC-7360N's duplex scanning.
+
+# Best CLI of Today
+```bash
+pdftk A=even.pdf B=odd.pdf shuffle A Bend-1 output merged.pdf
+```
+This command reverses document `B` and then shuffles with `A`. Fast and easy. No need to upload pdf to unreliable website or install any bulky pricy software. Just one line.
+
+In Mac OS X El Captain, please install [this one](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk_server-2.02-mac_osx-10.11-setup.pkg).
+
+Just love these [one liners](https://www.pdflabs.com/docs/pdftk-cli-examples/)
