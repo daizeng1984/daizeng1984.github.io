@@ -1,0 +1,54 @@
+---
+category: post
+title:  "Clang++"
+date:   "2018-08-13"
+size: 4
+visible: 1
+---
+gcc is deprecated now. Use clang!
+
+# GCC vs Clang++
+Short story: GCC is slow, old (consider compiling a C++17 package in [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)), GPL, not hackable;
+while [Clang](https://clang.llvm.org/) changes everyting above plus having its family support from [LLVM](https://llvm.org/).
+If you don't care about programming at operating system level and don't need to maintain legacy code that solely relies on GCC, this is definitely a benefitial move.
+
+# One Button
+Chandler Carruth's ["LLVM: A Modern, Open C++ Toolchain"](https://youtu.be/uZI_Qla4pNA) is a very nice talk to know more about modern toolchain for C++. What I found inspiring is how `modern` clang becomes. Below is a script drawn from the talk to download everything and build your clang from scratch.
+```bash
+git clone git://github.com/ninja-build/ninja.git
+cd ninja
+git checkout release
+./configure.py --bootstrap
+
+cd .. 
+git clone --depth=1 https://llvm.org/git/llvm.git # Don't clone everything
+
+cd llvm/tools 
+git clone --depth=1 https://llvm.org/git/clang.git
+git clone --depth=1 https://llvm.org/git/lld.git
+
+cd clang/tools
+git clone --depth=1 https://llvm.org/git/clang-tools-extra.git extra
+
+cd ../../../projects
+git clone --depth=1 https://llvm.org/git/libcxx.git
+git clone --depth=1 https://llvm.org/git/libcxxabi.git
+git clone --depth=1 https://llvm.org/git/compiler-rt.git 
+
+mkdir build && cd build
+cmake .. -GNinja  -DCMAKE_MAKE_PROGRAM=$(pwd)/../../ninja/ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/.local/ -DCOMPILER_RT_INCLUDE_TESTS=OFF -DLLVM_ENABLE_ASSERTIONS=OFF
+
+$(pwd)/../../ninja/ninja && $(pwd)/../../ninja/ninja install
+```
+
+Finally, some finishing touch:
+```bash
+export CXX=$(which clang++)
+export CC=$(which clang)
+```
+I actually use this [script]() to install Clang in my local dotfiles environment.
+# Compiler at Your Finger Tip
+Now after a few minute wait, you got the new freshly baked c++ compiler. No root permission or any painful dependency packages needed. Even though C++ seems to be the hardest language to apply [modern package management](https://buckaroo.pm/), I still hope C++ community will eventually come up with a `npm` equivalent public code repo/package manager at least working for most *nix system. 
+
+# Side Notes
+If you lead a Pythonful life, to install `cmake` you can simply run `pip install cmake` and upgrade becomes easier.

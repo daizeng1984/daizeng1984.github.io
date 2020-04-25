@@ -1,0 +1,60 @@
+---
+category: project
+date:   "2018-01-02"
+title: "Snip and Paste"
+titleImage: ../images/project/FFII_NES_Knife.svg
+view: blog
+visible: 1
+fullHeight: true
+resources:
+    - github:
+        res: "https://github.com/daizeng1984/vim-snip-and-paste"
+        desc: Github Page
+    - link: 
+        res: "/project-snip-n-paste"
+        desc: "Blog Post"
+---
+
+It's a breaking workflow when I need to take a picture of screen (to clipboard), save it into somewhere and link it before starting to write something in markdown. This plugin is to fix that for vim users. It can also do the same job for image file if you have its absolute path in clipboard!
+
+
+
+# But Markdown Cannot Show Image!
+
+Well I don't want to address this problem here but technically yes it can if you use a fancier terminal like [iTerm2](https://www.iterm2.com/). Actually for markdown preview in vim, a practical way is to use GUI vim e.g. [vimR](https://github.com/qvacua/vimr) or browser solution like [markdown instant preview](https://github.com/suan/vim-instant-markdown). However, if you are hardcore vimmer, probably solution as in [image.vim](https://github.com/ashisha/image.vim) will be preferrable. Maybe at some point, we could write another plugin to display colorful blocky image in markdown vim.
+
+
+# Search in Darkness
+First we need to grab clipboard data and this is not trivial at all in Python. [This](https://stackoverflow.com/questions/7045264/how-do-i-read-a-jpg-or-png-from-the-windows-clipboard-in-python-and-vice-versa) one from [PIL](https://python-pillow.org/) actually only support win32 unfortunately. So I did some research on stackoverflow: went through recommendations like [Pyperclip](https://pypi.python.org/pypi/pyperclip) (text-only and I used before but got issues due to its GUI dependencies in [Ranger](https://github.com/ranger/ranger)), [TKinter](https://wiki.python.org/moin/TkInter) (too heavy for a vim plugin), [PythonMagick](https://stackoverflow.com/questions/7045264/how-do-i-read-a-jpg-or-png-from-the-windows-clipboard-in-python-and-vice-versa#answer-7047190) (I use [Magick](https://www.imagemagick.org/script/index.php) a lot, but this python version has no [pip](http://pip.pypa.io/en/stable/) support, and is hard to install for normal users), [Xerox](https://stackoverflow.com/questions/7083313/python-get-mac-clipboard-contents#answer-8309779) (only support text, [richxerox](https://pypi.python.org/pypi/richxerox/1.0.0) does extra for html but didn't support image)... I'm surprised that we don't have this in Python! Maybe because this type (clipboard) of GUI related feature have too much trap to cross platform. But I just need it work on Mac OSX and Linux.
+
+# From Scratch
+Therefore, here's what I could do at this point:
+For Mac OS X: we just need to `brew install pngpaste` from [here](https://github.com/jcsalterego/pngpaste). Then use osascript to check the clipboard information and call this program to do the job.
+For Linux: this [answer](https://stackoverflow.com/questions/6841532/linux-image-from-clipboard#answer-27995840) looks promising.
+
+Ok, let's quickly build a working plugin. Since we have access to clipboard and we could also check if clipboard contains image file name to copy it to local folder and link in markdown as well.
+
+Hooray for Mac Vim user! Now, let's make it work in Linux.
+
+# Bumping Around
+Again promising `xclip` suggested from [here](https://stackoverflow.com/questions/6841532/linux-image-from-clipboard#answer-27995840) doesn't work... and some suggests [pygtk](https://superuser.com/questions/199285/how-to-copy-image-to-clipboard-to-paste-to-another-application/247069#answer-247069). Okay, looks like we are stuck in GTK but that should be fine (easier to install on linux and probably on mac as well) for most use cases. PyGtk is actually a bit old, and we'd better use GTK3 from [here](https://python-gtk-3-tutorial.readthedocs.io/en/latest/index.html).
+
+So I installed `pyobject2` and `python34-gobject` and try the [test code](https://pygobject.readthedocs.io/en/latest/). After making sure everything works, just follow the [example](http://python-gtk-3-tutorial.readthedocs.io/en/latest/clipboard.html) snippet:
+```python
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gdk
+
+clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+image = clipboard.wait_for_image()
+if image is not None:
+    image.savev('screenshot.png', 'png', [], [])
+
+text = clipboard.wait_for_text()
+if text is not None:
+    print(text)
+```
+It's so simple, neat and I just wanted to have it on Mac as well.
+
+# Revisit PyGObject on Mac
+conda install -c conda-forge pygobject
