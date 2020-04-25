@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-05-18T00:52:10-07:00</updated><id>/feed.xml</id><title type="html">Zeng’s Home Page</title><subtitle>Zeng Dai's new home page powered by Jekyll, MDL, and a lot of open source plugins
+</subtitle><entry><title type="html">System Design I</title><link href="/jekyll/update/2019/05/14/system-design.html" rel="alternate" type="text/html" title="System Design I" /><published>2019-05-14T00:43:48-07:00</published><updated>2019-05-16T01:12:03-07:00</updated><id>/jekyll/update/2019/05/14/system-design</id><content type="html" xml:base="/jekyll/update/2019/05/14/system-design.html">&lt;p&gt;As a builder, if you want to go to next level, you should learn how to build the whole building or even the whole city.&lt;/p&gt;
+
+&lt;h1 id=&quot;intros&quot;&gt;Intros&lt;/h1&gt;
+&lt;p&gt;Big picture.
+Lead the project.
+Delegate job
+Responsible 
+Key is you’ve seen many cases and you know what’s going to happen later. So you get everything prepared.&lt;/p&gt;
+
+&lt;p&gt;Case by Case, for series I we will start from very basic one: Crawler.&lt;/p&gt;
+&lt;h2 id=&quot;crawler&quot;&gt;Crawler&lt;/h2&gt;
+&lt;p&gt;Crawler seems to be so simple that looks like a course project from CS 101. However it can be really hard! Think about a huge engineering team in Google is trying to do this correct. So it’s not that easy.&lt;/p&gt;
+
+&lt;p&gt;what’s missing in our project? Let’s get back to problem and this time we think it seriously considering all could happens.&lt;/p&gt;
+
+&lt;p&gt;System that visit one web page, and then extract the url from page content and then continue to traverse the url do similar things.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Scalability. WWW&lt;/li&gt;
+  &lt;li&gt;Distributed structure&lt;/li&gt;
+  &lt;li&gt;Adversary. robot spam site,&lt;/li&gt;
+  &lt;li&gt;Loop and Seen check.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Stanford slides good!&lt;/p&gt;
+
+&lt;p&gt;We have some industrial case as show here:
+https://qbox.io/blog/scraping-the-web-with-nutch-for-elasticsearch&lt;/p&gt;</content><author><name></name></author><summary type="html">As a builder, if you want to go to next level, you should learn how to build the whole building or even the whole city.</summary></entry><entry><title type="html">Add Webpack to Jekyll</title><link href="/jekyll/update/2019/05/12/reactjs+webpack+jekyll.html" rel="alternate" type="text/html" title="Add Webpack to Jekyll" /><published>2019-05-12T11:22:04-07:00</published><updated>2019-05-14T10:10:17-07:00</updated><id>/jekyll/update/2019/05/12/reactjs+webpack+jekyll</id><content type="html" xml:base="/jekyll/update/2019/05/12/reactjs+webpack+jekyll.html">&lt;p&gt;It’s been on my TODO list for a while to put frontend framework into Jekyll&lt;/p&gt;
+
+&lt;h1 id=&quot;why&quot;&gt;Why&lt;/h1&gt;
+&lt;p&gt;Jekyll template is great but it’s static multipage. Considering later I might post a few front end stuff (single page toy) in my blog with more new js and css to use, I guess it’s time to move and organize every js/css to &lt;a href=&quot;https://webpack.js.org/&quot;&gt;Webpack&lt;/a&gt; and use some framework for frontend view. This work is the behind the scene: my website won’t visually change much. However it did accelerate a bit cause Webpack could do some optimization like minimize. As frontend framework, &lt;a href=&quot;https://reactjs.org/&quot;&gt;ReactJS&lt;/a&gt; is &lt;a href=&quot;https://2018.stateofjs.com/front-end-frameworks/conclusion/&quot;&gt;cool and hot&lt;/a&gt;, so it’s not bad to use it for any frontend view related work.&lt;/p&gt;
+
+&lt;h1 id=&quot;folder-structure&quot;&gt;Folder Structure&lt;/h1&gt;
+&lt;p&gt;Jeyll has its own structure, and we need to add webpack config and source atop. Just think a plain folder name and make it as separate as possible. Some examples from Google Search should be fine to follow: like &lt;a href=&quot;https://medium.com/@allizadrozny/using-webpack-and-react-with-jekyll-cfe137f8a2cc&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;webpack&quot;&gt;Webpack&lt;/h1&gt;
+&lt;p&gt;Webpack essentially do one job: bundle your assets including js, css, shaders, etc. and then it could nicely either inject your bundle assets into the html or you manually inject yourself. I like this tool better than &lt;a href=&quot;https://gulpjs.com/&quot;&gt;gulp&lt;/a&gt; etc. because it’s so convenient with a lot of ready-to-use plugin and you don’t need to do much more (like the feeling of Spring Boot). For React we just need to &lt;code class=&quot;highlighter-rouge&quot;&gt;npm install --save-dev&lt;/code&gt; a bunch of packages from &lt;a href=&quot;https://babeljs.io/docs/en/&quot;&gt;Babel&lt;/a&gt; and it should work out of box too. However, setting up &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack.config.js&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; takes some efforts e.g. to: find the name; solve dependencies issue; and figure out new version vs old version. Therefore, to help you if interested, I also dump them out here. First is the major part of our &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+    
+  &lt;span class=&quot;s2&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;start&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;concurrently &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;./node_modules/.bin/webpack --watch&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bundle exec jekyll serve&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;echo &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Error: no test specified&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &amp;amp;&amp;amp; exit 1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;prod&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;./node_modules/.bin/webpack  --config webpack.prod.config.js&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;@babel/core&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^7.4.4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;@babel/preset-env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^7.4.4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;@babel/preset-react&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^7.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;babel-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^8.0.6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;concurrently&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^4.1.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;css-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^2.1.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;extract-text-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^4.0.0-beta.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;file-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^3.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;html-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^0.5.5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;html-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^3.2.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;optimize-css-assets-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^5.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;raw-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^2.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;react&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^16.8.6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;react-addons-update&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^15.6.2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;react-dom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^16.8.6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;style-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^0.23.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;terser-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^1.2.3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;webpack&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^4.31.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;webpack-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;^3.3.2&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This config contains all the npm package to make webpack and reactjs lib dependency right including &lt;code class=&quot;highlighter-rouge&quot;&gt;concurrently&lt;/code&gt; that runs webpack and jekyll simultaneously with the magic &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;concurrently \&quot;./node_modules/.bin/webpack --watch\&quot; \&quot;bundle exec jekyll serve\&quot;&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Second part is &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack.config.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HtmlWebPackPlugin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;html-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'path'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ExtractTextPlugin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;extract-text-webpack-plugin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;./webpack/js/main.js&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/assets/built'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;bundle.js&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;modules&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/node_modules'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;jsx&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;node_modules&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;babel-loader&quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;html$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;na&quot;&gt;loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;html-loader&quot;&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;css$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;fallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;style-loader&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;css-loader&quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;png|jpe&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;g|gif|svg|woff|woff2|ttf|eot|ico&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'file-loader?name=assets/[name].[hash].[ext]'&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ExtractTextPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;style.css&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;NODE_ENV&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;development&quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'development'&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This configuration can pack your js into &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle.js&lt;/code&gt;, css into &lt;code class=&quot;highlighter-rouge&quot;&gt;style.css&lt;/code&gt; and hash font name etc. as long as you &lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt; the files (js/css) in your entry js, which is &lt;code class=&quot;highlighter-rouge&quot;&gt;main.js&lt;/code&gt; here in config file. Note here I removed the html templating but feel free to add it back for your application because right now I was actually using Jekyll’s. Note if you need do multiple ReactJS projects like me you need to add entry point for each ReactJS project.&lt;/p&gt;
+
+&lt;p&gt;So the following work is tediously importing things.&lt;/p&gt;
+
+&lt;h1 id=&quot;reactjs&quot;&gt;ReactJS&lt;/h1&gt;
+&lt;p&gt;What I like ReactJS is that it actually force you to think page in components and commuicate via Flux. This is benefitial and elegant when you have a lot of components to interact for users and unlike Angular which is now very &lt;code class=&quot;highlighter-rouge&quot;&gt;Java&lt;/code&gt;, you got a lot easier to handle template’s data binding.&lt;/p&gt;
+
+&lt;h1 id=&quot;result&quot;&gt;Result&lt;/h1&gt;
+&lt;p&gt;So end up with this &lt;a href=&quot;https://codepen.io/gaearon/pen/gWWZgR?editors=0010&quot;&gt;TicTacToe&lt;/a&gt; below rendered by ReactJS! Thank you for reading to this far! I also didn’t expect I could write about this work so much…&lt;/p&gt;
+
+&lt;div id=&quot;react-example&quot;&gt;
+&lt;/div&gt;
+&lt;link href=&quot;/assets/built/example-style.css&quot; rel=&quot;stylesheet&quot; /&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;/assets/built/example-bundle.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;</content><author><name></name></author><summary type="html">It’s been on my TODO list for a while to put frontend framework into Jekyll</summary></entry><entry><title type="html">Train Your Ninja</title><link href="/jekyll/update/2018/12/23/play-ninja-gaiden.html" rel="alternate" type="text/html" title="Train Your Ninja" /><published>2018-12-23T21:53:01-08:00</published><updated>2019-05-18T00:50:15-07:00</updated><id>/jekyll/update/2018/12/23/play-ninja-gaiden</id><content type="html" xml:base="/jekyll/update/2018/12/23/play-ninja-gaiden.html">&lt;p&gt;Ninja Gaiden is a nightmare game when I was kid… &lt;a href=&quot;/jekyll/update/2018/12/23/play-ninja-gaiden.html#a-few-rough-ideas-so-far&quot;&gt;TL;DR&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;ninja-gaiden&quot;&gt;Ninja Gaiden&lt;/h1&gt;
+
+&lt;p&gt;This is the ninja game for real ninja. Jump &amp;amp; slash, swift moving and never hesitate. I cannot beat this game as a kid and still struggle today. But now &lt;a href=&quot;https://deepmind.com/research/dqn/&quot;&gt;dqn&lt;/a&gt; sounds so powerful that we probably got some chances?&lt;/p&gt;
+
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/ninja-gaiden.jpg&quot; alt=&quot;ninja-gaiden&quot; width=&quot;30%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+Ninja Gaiden, from Tecmo&lt;/p&gt;
+
+&lt;h1 id=&quot;wait&quot;&gt;Wait…&lt;/h1&gt;
+&lt;p&gt;There Are Already a Lot of Nice Stuff for these type of games e.g. Super Mario Bros. It looks this problem is solved (AI beats human). However they are not ninja gaiden ☺︎ . This game is quite special and different from game like super mario. It’s unfriendly to beginner; it has complicate scenes (visually, e.g. strange climb detection and bounding box); it has a few glitches/techniques (multiple slashes, air floor, and damage boost) that makes interesting for AI to explore; a lot of different powerup weapons and &lt;code class=&quot;highlighter-rouge&quot;&gt;ninpo&lt;/code&gt;; … Most importantly, having finished readings on this great &lt;a href=&quot;https://simoninithomas.github.io/Deep_reinforcement_learning_Course/&quot;&gt;intro&lt;/a&gt; website (recommend for beginner of reinforcement learning), it makes me very curious to see whether career of Ryu/ninja can be replaced by state of art reinforcement learning agent.&lt;/p&gt;
+
+&lt;h1 id=&quot;openai-gym&quot;&gt;OpenAI Gym&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://gym.openai.com/&quot;&gt;Gym&lt;/a&gt; is the environment created to train AI on many different games. NES game’s Gym is not officially supported due to some reasons. The quick search leads me to the work like &lt;a href=&quot;https://www.youtube.com/watch?v=qv6UVOQ0F44&quot;&gt;Mario NEAT&lt;/a&gt; that uses the Lua script on &lt;a href=&quot;http://www.fceux.com/web/home.html&quot;&gt;Fceux&lt;/a&gt;. Not a fan of Lua, so I started to look for something in Python.&lt;/p&gt;
+
+&lt;p&gt;Finally, I end up with &lt;a href=&quot;https://github.com/Kautenja/nes-py&quot;&gt;nes-py&lt;/a&gt;, which is very pythony and have &lt;a href=&quot;https://github.com/Kautenja/nes-py/wiki/Creating-Environments&quot;&gt;wiki&lt;/a&gt; to help build your own environment. Even though I ran into some trouble building the nes-py package because python setuptools requires some strange CXXFLAGS (-flto-partition=None) that my clang doesn’t like, but eventually I manually built this package with some hacky way in pip temp folders and moved around the *.so in nes-py package. BTW, the author of nes-py also have an example of Super Mario Bro’s nes environment, check &lt;a href=&quot;https://github.com/Kautenja/nes-py/wiki/Creating-Environments&quot;&gt;it&lt;/a&gt; out if interested.&lt;/p&gt;
+
+&lt;h1 id=&quot;hack-into-ninja-gaiden&quot;&gt;Hack into Ninja Gaiden&lt;/h1&gt;
+&lt;p&gt;Now we need to know where (memory address) is the data (e.g. hit point). Thanks to gamers, we have a nice website named &lt;a href=&quot;http://tasvideos.org/GameResources/NES/NinjaGaiden.html&quot;&gt;TASVideo&lt;/a&gt; documenting a lot. But be aware some of them are not precise enough. For example, to get the x position of Ryu, I checked many the memory location and eventually figured it out it’s a fixed point 3-bit float instead of the 2-bit screen position as in document.&lt;/p&gt;
+
+&lt;h1 id=&quot;agents&quot;&gt;Agents&lt;/h1&gt;
+&lt;p&gt;Now let’s go down to business. I stolen a lot of code from internet &lt;a href=&quot;https://github.com/jcwleo/mario_rl&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/tree/master/a2c_ppo_acktr&quot;&gt;there&lt;/a&gt;. Again before diving, I’d suggest you read through this free intro &lt;a href=&quot;https://simoninithomas.github.io/Deep_reinforcement_learning_Course/&quot;&gt;course&lt;/a&gt; to understand the basics of a2c, ppo etc.. I created a simple and cruel reward function to best encourage moving fast to end of the level. No reward to slash enemy or gain &lt;code class=&quot;highlighter-rouge&quot;&gt;ninpo&lt;/code&gt; etc. because I really wanted to see an AI speedrunner.&lt;/p&gt;
+
+&lt;p&gt;Let’s first only focus on level 1-1.&lt;/p&gt;
+
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/ninja-struggles.gif&quot; alt=&quot;ninja-learning-gaiden&quot; width=&quot;100%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+Ninja Learning Gaiden&lt;/p&gt;
+
+&lt;p&gt;Here’s my shallow findings after 8 hours training (sorry slow computer) for different models:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;PPO performs not as good as A2C&lt;/li&gt;
+  &lt;li&gt;A2C stopped maybe due to bugs&lt;/li&gt;
+  &lt;li&gt;A2C curiority works mostly and even finished the level 1&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As non-expert, for these models I cannot really judge good or bad, but only based on the implementation result. None of them surprise me as they did in Super Mario. They seems to be really confused even after training a while. Later probably I should try out the OpenAI’s newly published a2c models. But even with these little experience, I still could get some &lt;code class=&quot;highlighter-rouge&quot;&gt;the state-of-art&lt;/code&gt; feeling.&lt;/p&gt;
+
+&lt;h1 id=&quot;whats-promising&quot;&gt;What’s Promising&lt;/h1&gt;
+&lt;h2 id=&quot;climb-the-obstacle&quot;&gt;Climb the Obstacle&lt;/h2&gt;
+&lt;p&gt;Most Agents will stop at the wall, because it doesn’t know how to get there. some can search some just cannot.
+I’m amazed AI with curiosity can actually figure out the wall climb jump. For human, it’s really hard to do that since this behavior (control) is not quite human anyway.&lt;/p&gt;
+
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/ninja-climb.gif&quot; alt=&quot;ninja-climb&quot; width=&quot;30%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+Ninja can climb&lt;/p&gt;
+
+&lt;h2 id=&quot;powerup-items&quot;&gt;Powerup Items&lt;/h2&gt;
+&lt;p&gt;Also thumb up for the self-motivated behavior to slash the ninpo even though I didn’t give it as reward. Maybe the agent is just do it for fun ☺︎ .&lt;/p&gt;
+
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/ninja-blindly-powerup.gif&quot; alt=&quot;ninja-powerup&quot; width=&quot;30%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+Ninja blindly loves powerup :)&lt;/p&gt;
+
+&lt;h2 id=&quot;finding-secretsbugs&quot;&gt;Finding Secrets/Bugs&lt;/h2&gt;
+&lt;p&gt;AI even can jump on air floor which is usually done by speedrunners.&lt;/p&gt;
+
+&lt;h1 id=&quot;challenges&quot;&gt;Challenges&lt;/h1&gt;
+&lt;h2 id=&quot;fight-tyson&quot;&gt;Fight Tyson&lt;/h2&gt;
+&lt;p&gt;Tyson is annoying for AI and beginners too. Sometimes, AI is just like a scared cat in the tree.&lt;/p&gt;
+
+&lt;h2 id=&quot;strategy-thinking&quot;&gt;Strategy Thinking&lt;/h2&gt;
+&lt;p&gt;Probably Super Mario is no brainer game, player doesn’t need to think about strategy too much: all rewards can be achieved in very short time period or strategy is very easy to discover. But in this Ninja Gaiden, strategically gain Ninpo and other weapons can largely improve performance. Unfortunately, I didn’t see any hopes for all the models I tested.&lt;/p&gt;
+
+&lt;h1 id=&quot;real-ninja-vs-ai&quot;&gt;Real Ninja vs AI&lt;/h1&gt;
+&lt;p&gt;First of all, human are still fine. At this point, AI cannot beat human or even beginners with a few min training. A long way to go! Also depending on game’s genre, the more strategic the more hard for AI because they only have visual clues. Not like us, we’ve been educated from different kinds of source (visual, sound, feel…) since born. But AI can do really well in visual game and not suprisingly better than human because they can try different ways again and again and operate much faster than human.&lt;/p&gt;
+
+&lt;p&gt;Look at this &lt;a href=&quot;https://youtu.be/OGZWkqdwfEI?t=8&quot;&gt;speedrunner&lt;/a&gt;, human’s proud!&lt;/p&gt;
+
+&lt;h2 id=&quot;a-few-rough-ideas-so-far&quot;&gt;A Few Rough Ideas So Far&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;AI probably could have seen better given better emulator environment. NES game has limitation to show multiple enemy in same screen nor does it have alpha blending. You’ll see blinking sprite from time to time. This probably annoys AI a bit.&lt;/li&gt;
+  &lt;li&gt;Multitask or modularization (components) helps. For example a better visual detection to identify the enemy and a thinker network with more memory to think strategy.&lt;/li&gt;
+  &lt;li&gt;I feel curiosity is a key factor to avoid local optimal and we should keep trying a lot in limited time.&lt;/li&gt;
+  &lt;li&gt;Human teacher will definitely help boost the performance. This is perhaps why Go players like &lt;a href=&quot;https://en.wikipedia.org/wiki/Lee_Sedol&quot;&gt;Lee Sedol&lt;/a&gt; cannot win AI cause we give them the optimal searching path we human found through years of training experience and computer is faster to process number/arithm than us &lt;code class=&quot;highlighter-rouge&quot;&gt;atop of our experience&lt;/code&gt;. It’s not a fair game at all from this pov. But I really appreciate our Go players to help promote AI techniques. Same idea can apply if we have our speed runners to teach computer and then they can beat us by searching and improving the margins.&lt;/li&gt;
+  &lt;li&gt;Perhaps within our era, AI without a huge team behind is still primitive.&lt;/li&gt;
+  &lt;li&gt;Purely relying on visual clues is like we human only trust our vision hunch (muscle memory?). It won’t make us stand out in more strategical competition like &lt;a href=&quot;http://www.dota2.com/&quot;&gt;DoTA&lt;/a&gt;. In these games, human sometimes can sacrifice some short time low reward to gain something bigger, and this experience is learnt from other resources after we are born.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--- # Resources
+DISPLAY=:0.0 python run.py # Display is to solve the device none error
+https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
+https://www.cs.ubc.ca/~gberseth/blog/category/project.html
+https://github.com/udacity/deep-reinforcement-learning/blob/master/dqn/exercise/dqn_agent.py
+---&gt;</content><author><name></name></author><summary type="html">Ninja Gaiden is a nightmare game when I was kid… TL;DR</summary></entry><entry><title type="html">Revisit Conda</title><link href="/jekyll/update/2018/11/18/conda-everything.html" rel="alternate" type="text/html" title="Revisit Conda" /><published>2018-11-18T16:17:34-08:00</published><updated>2018-12-23T01:14:52-08:00</updated><id>/jekyll/update/2018/11/18/conda-everything</id><content type="html" xml:base="/jekyll/update/2018/11/18/conda-everything.html">&lt;p&gt;Conda is not just for Python.&lt;/p&gt;
+
+&lt;h1 id=&quot;conda&quot;&gt;Conda&lt;/h1&gt;
+&lt;p&gt;Conda is a cross-platform, language-agnostic binary package manager. Shame for me :worried:, it’s there for years, but only recently I’ve realized how awesome it is! Maybe Anaconda’s daunting fat distribution scares away people like me. Anyhow, with &lt;a href=&quot;https://conda.io/miniconda.html&quot;&gt;MiniConda&lt;/a&gt; you can manage virtual environment of your *nix packages. If you works on app level development (not OS related), you can easily make almost every standard linux dev package &lt;code class=&quot;highlighter-rouge&quot;&gt;virtual&lt;/code&gt;. This is super useful if you’re not sudoer or in big tech giants (which usually has their own package mangers) but want to do something big or you don’t like heavy rocket-launcher solutions (&lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt;/&lt;a href=&quot;https://en.wikipedia.org/wiki/Virtual_machine&quot;&gt;VirtualMachine&lt;/a&gt;). Actually, inside conda’s &lt;code class=&quot;highlighter-rouge&quot;&gt;x86_64-conda_*-linux-gnu/sysroot&lt;/code&gt;, you can build your own *nix kingdom or miniverse.&lt;/p&gt;
+
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/miniverse.png&quot; alt=&quot;miniverse&quot; width=&quot;50%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+A miniverse, from &lt;a href=&quot;http://rickandmorty.wikia.com/wiki/The_Ricks_Must_Be_Crazy&quot;&gt;Rick and Morty&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;use-conda-for-everything&quot;&gt;Use Conda for Everything&lt;/h1&gt;
+&lt;p&gt;I’ve found a lot packages in anaconda shopping mall: &lt;strong&gt;zsh, clang, cmake, libtool, autoconfig, nodejs, ruby, openjdk&lt;/strong&gt;… all linux toolchains and packages you could image. Vendor like &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; makes a lot of recipes, got to check it out. Next time when you want to &lt;em&gt;brew/apt/yum install&lt;/em&gt;, you should first check if you can do it in conda elegantly. The good things is that you don’t need to messing around with folders like &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/bin&lt;/code&gt; etc. and you can easily revert to your previous install revisions. Excited by this finding, I’ve migrated all my old install &lt;a href=&quot;https://github.com/daizeng1984/dotfiles/blob/experimental/installConda.sh&quot;&gt;scripts&lt;/a&gt; just to use conda so that my environment is more independent.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-no-recent-neovim&quot;&gt;What? no recent neovim?&lt;/h1&gt;
+&lt;p&gt;In anaconda, I can only find python package instead of native neovim app I need. There are some native neovim build but mostly outdated. One of the greatest things about conda ecosystem is: if some package’s missing, you can build it from source and then share it on Anaconda store. Everyone else benefits by saving a lot of build/release time. 
+Build conda packages is so &lt;a href=&quot;http://mlg.eng.cam.ac.uk/hoffmanm/blog/2016-02-25-conda-build/&quot;&gt;easy&lt;/a&gt;. Always remember &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; is one of the most resourceful channels. After some searching, you could write your first build &lt;a href=&quot;script&quot;&gt;script&lt;/a&gt; for neovim quickly. Then you just do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda build nvim -c conda-forge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Later install this package locally. In my case, &lt;code class=&quot;highlighter-rouge&quot;&gt;conda install --use-local&lt;/code&gt; doesn’t work, so I used this one &lt;code class=&quot;highlighter-rouge&quot;&gt;conda install -c file://${CONDA_PREFIX}/conda-bld/&amp;lt;PACKAGENAME&amp;gt;&lt;/code&gt;. When build is working, you could upload it for example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anaconda login
+anaconda upload ${CONDA_PREFIX}/conda-bld/linux-64/nvim-0.3.1-0.tar.bz2 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Of course, you can do better using &lt;a href=&quot;https://en.wikipedia.org/wiki/Continuous_integration&quot;&gt;CI&lt;/a&gt; like &lt;a href=&quot;https://travis-ci.org/&quot;&gt;Travis&lt;/a&gt; to automate releasing of all platforms. You can also push your recipe to &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; for publish like &lt;a href=&quot;https://gist.github.com/zshaheen/fe76d1507839ed6fbfbccef6b9c13ed9&quot;&gt;here&lt;/a&gt; or &lt;a href=&quot;https://gist.github.com/yoavram/05a3c04ddcf317a517d5&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;So now everyone who wants neovim in conda could do this in Linux/OSX, :raised_hands::&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda install -y -c daizeng1984 nvim
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;revisit-my-previous-projects&quot;&gt;Revisit My Previous Projects&lt;/h1&gt;
+&lt;p&gt;If you worked with Python before, you must remember the nightmare with Python’s native dependencies e.g. &lt;strong&gt;BLAS, OpenLdap, Cyrus-Sasl&lt;/strong&gt; etc.. One of my python neovim plugin also has hard-to-get dependency. This sucks and frustrates a lot since we are advertised Python is very cross-platformy. Now with conda, you have more confidence to install all dependencies using merely &lt;code class=&quot;highlighter-rouge&quot;&gt;conda install&lt;/code&gt;. There are still some Python packages (pip) or outlaws that don’t respect conda, and blindly complains about e.g. missing lib’s headers. In this case, we need keep the build folder (–no-clean), add lib and include locations in &lt;code class=&quot;highlighter-rouge&quot;&gt;setup.cfg&lt;/code&gt; and reinstall.&lt;/p&gt;
+
+&lt;p&gt;For example, my neovim plugin &lt;a href=&quot;https://github.com/daizeng1984/vim-snip-and-paste&quot;&gt;Snip-n-Paste&lt;/a&gt;, requires &lt;a href=&quot;https://pygobject.readthedocs.io/en/latest/getting_started.html&quot;&gt;pygobject&lt;/a&gt; which usually took quite some time to get it right, but now it’s simply: &lt;code class=&quot;highlighter-rouge&quot;&gt;conda install -c pkgw-forge -c conda-forge gtk3 pygobject&lt;/code&gt;. Another example is installing the servers for LanguageClient e.g. cquery.&lt;/p&gt;
+
+&lt;h1 id=&quot;cons&quot;&gt;Cons?&lt;/h1&gt;
+&lt;p&gt;You got me, not perfect at everything, just for open *nix packages. You cannot install OS dependent app e.g. mac store app etc.. There are also some boundaries if you have some outlaw (mostly native code related) apps, e.g. &lt;a href=&quot;https://matplotlib.org/faq/osx_framework.html&quot;&gt;maplot&lt;/a&gt;. In these case, you’re still limited to &lt;code class=&quot;highlighter-rouge&quot;&gt;brew install&lt;/code&gt;, but maybe think about: do you really need these not very portable &lt;code class=&quot;highlighter-rouge&quot;&gt;bad guys&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;conda might as well have issues with versions consistency. You need to choose the reliable channel. But again, when messed up, you can always revert back. To minimize these issues, I’d stick to &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; channel for all dependencies and when necessary, build my own. Therefore, for my conda experience so far, so good.&lt;/p&gt;
+
+&lt;p&gt;Of course, conda is not alone. For *nix environment, &lt;a href=&quot;https://nixos.org/nix/&quot;&gt;Nix&lt;/a&gt; as another package manager claims to be as cool as it and it seems to gain a lot of attention recently. However, no matter your choice, it’s good to make your development environment as independent as possible.&lt;/p&gt;</content><author><name></name></author><summary type="html">Conda is not just for Python.</summary></entry><entry><title type="html">Language Server Protocol</title><link href="/jekyll/update/2018/11/04/language-server-protocol.html" rel="alternate" type="text/html" title="Language Server Protocol" /><published>2018-11-04T08:10:31-08:00</published><updated>2018-12-15T21:44:31-08:00</updated><id>/jekyll/update/2018/11/04/language-server-protocol</id><content type="html" xml:base="/jekyll/update/2018/11/04/language-server-protocol.html">&lt;p&gt;Setting up various &lt;a href=&quot;https://en.wikipedia.org/wiki/Integrated_development_environment&quot;&gt;IDE&lt;/a&gt;-like autocompleter in vim is painful until I met &lt;a href=&quot;https://github.com/autozimu/LanguageClient-neovim&quot;&gt;LanguageClient-neovim&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;first-disclaimer&quot;&gt;First, Disclaimer&lt;/h1&gt;
+&lt;p&gt;I’ve been using Shougo’s completion plugin ever since neocomplete (during the ancient vim time). Now in neovim, it has its &lt;a href=&quot;https://github.com/Shougo/deoplete.nvim&quot;&gt;dark&lt;/a&gt; form. If you are using other completion plugins like &lt;a href=&quot;https://github.com/ncm2/ncm2&quot;&gt;ncm2&lt;/a&gt;, this post might not be the case.&lt;/p&gt;
+
+&lt;h1 id=&quot;language-server-protocol&quot;&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Language_Server_Protocol&quot;&gt;Language Server Protocol&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;If you ask what changed my impression of Microsoft, I’d answer this Language Server Protocol as one. From the &lt;a href=&quot;https://microsoft.github.io/language-server-protocol/implementors/servers/&quot;&gt;official page&lt;/a&gt;, you could see so far many programming languages and &lt;a href=&quot;https://en.wikipedia.org/wiki/Domain-specific_language&quot;&gt;DSL&lt;/a&gt; are onboard! Even though &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;vscode&lt;/a&gt; still takes first class seat, I’m sure we’ll see more powerful standalone servers coming up. Wow, you could even get a server for &lt;a href=&quot;http://nehe.gamedev.net/article/glsl_an_introduction/25007/&quot;&gt;GLSL&lt;/a&gt;. No complaints anymore!&lt;/p&gt;
+
+&lt;h1 id=&quot;so-goodbye-eclim-ternjs-and-&quot;&gt;So Goodbye? &lt;a href=&quot;http://eclim.org/&quot;&gt;Eclim&lt;/a&gt;, &lt;a href=&quot;http://ternjs.net/&quot;&gt;Tern.js&lt;/a&gt; and …&lt;/h1&gt;
+&lt;p&gt;That means whenever I need to work on a new language in vim, I no longer need to search that particular &lt;a href=&quot;https://github.com/Shougo/deoplete.nvim&quot;&gt;deoplete&lt;/a&gt; plugins and make it work after hours due to dependencies and .vimrc configuration. Installing completion engine dependencies is tedious: I still remember &lt;a href=&quot;https://github.com/carlitux/deoplete-ternjs&quot;&gt;tern.js&lt;/a&gt; was not friendly and &lt;a href=&quot;http://eclim.org/vim/code_completion.html&quot;&gt;Eclim&lt;/a&gt; bundled with the huge &lt;a href=&quot;https://www.eclipse.org/&quot;&gt;Eclipse&lt;/a&gt; GUI family sale is quite tough. They lack of a universal language protocol standard. Even you succeed to make it work, after, you also need to weak key bindings for each of them.&lt;/p&gt;
+
+&lt;p&gt;Now with LanguageClient-neovim, I just install the servers (Note: not all of them are out of box but doable and only one time effort) and tell vim where their binaries are. I have freedom to choose any servers I like and freedom to pick up any editors/clients. I’ve tried out 4 languages so far: Java, Javascript, C++ and Python. They are working amazingly well. Let’s see how much work to happiness:&lt;/p&gt;
+
+&lt;h2 id=&quot;java&quot;&gt;Java&lt;/h2&gt;
+&lt;p&gt;From the document, you feel you have to build either &lt;a href=&quot;https://github.com/eclipse/eclipse.jdt.ls/&quot;&gt;eclipse.jdt&lt;/a&gt; or &lt;a href=&quot;https://github.com/georgewfraser/vscode-javac&quot;&gt;javac based ls&lt;/a&gt;. However, for eclipse.jdt they have prebuilt versions to download &lt;a href=&quot;http://download.eclipse.org/jdtls/milestones/&quot;&gt;here&lt;/a&gt;! So download and &lt;code class=&quot;highlighter-rouge&quot;&gt;untar&lt;/code&gt;, and then follow the &lt;a href=&quot;https://github.com/autozimu/LanguageClient-neovim/wiki/Java#user-content-installation&quot;&gt;script&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;python&quot;&gt;Python&lt;/h2&gt;
+&lt;p&gt;Simply run &lt;code class=&quot;highlighter-rouge&quot;&gt;pip install python-language-server&lt;/code&gt; figure out your &lt;code class=&quot;highlighter-rouge&quot;&gt;pyls&lt;/code&gt; binary path and you are done!&lt;/p&gt;
+
+&lt;h2 id=&quot;javascript&quot;&gt;Javascript&lt;/h2&gt;
+&lt;p&gt;Same as Python, you just need to &lt;code class=&quot;highlighter-rouge&quot;&gt;npm install javascript-typescript-langserver&lt;/code&gt; and find the binaries.&lt;/p&gt;
+
+&lt;h2 id=&quot;c&quot;&gt;C++&lt;/h2&gt;
+&lt;p&gt;If you choose clang (&lt;a href=&quot;/jekyll/update/2018/08/13/clang-llvm.html&quot;&gt;which you probably do&lt;/a&gt;), you just need to install clang with extra tools in box as in this &lt;a href=&quot;https://github.com/autozimu/LanguageClient-neovim/wiki/Clangd&quot;&gt;tutorial&lt;/a&gt;. Although signature has an &lt;a href=&quot;https://github.com/autozimu/LanguageClient-neovim/issues/379&quot;&gt;issue&lt;/a&gt;, but I believe community will solve it soon.&lt;/p&gt;
+
+&lt;h1 id=&quot;to-sum-up&quot;&gt;To Sum Up&lt;/h1&gt;
+&lt;p&gt;After installing these servers, you just need a few lines in your vim plugins settings like &lt;a href=&quot;https://github.com/daizeng1984/dotfiles/blob/3b4f4473f17575eae54e554e48ba9ef78ccc1a44/neovim/nvim/config/plugins.vimrc#L257&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Easy piece, right? No?! Okay, if you enjoy a bit more automation, I have a &lt;a href=&quot;https://github.com/daizeng1984/dotfiles/blob/experimental/misc/installNeovimLanguageServers.sh&quot;&gt;script&lt;/a&gt; to deploy servers in my dotfile environment, you could adapt and make it yours.&lt;/p&gt;
+
+&lt;h1 id=&quot;other-finding&quot;&gt;Other Finding&lt;/h1&gt;
+&lt;p&gt;At this stage, even not fully convinced but I found &lt;a href=&quot;https://github.com/neoclide/coc.nvim&quot;&gt;coc.nvim&lt;/a&gt; as yet another completion plugin seems to adapt all vscode language-service extensions to vim. If you like more vscode like features and don’t have time to install each individual server, you might consider giving it a try. It seems to be still in heavy development. I chose to give it a little bit more time until I get tired of this LanguageClient plugin.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile, while we wait, neovim is working on more native lsp support &lt;a href=&quot;https://github.com/neovim/neovim/pull/6856&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Setting up various IDE-like autocompleter in vim is painful until I met LanguageClient-neovim.</summary></entry><entry><title type="html">Free Gantt App</title><link href="/jekyll/update/2018/08/25/gantt-chart-app.html" rel="alternate" type="text/html" title="Free Gantt App" /><published>2018-08-25T03:31:38-07:00</published><updated>2019-05-10T21:01:09-07:00</updated><id>/jekyll/update/2018/08/25/gantt-chart-app</id><content type="html" xml:base="/jekyll/update/2018/08/25/gantt-chart-app.html">&lt;p&gt;Wanna a gantt chart editor for free? Download &lt;a href=&quot;https://github.com/daizeng1984/jQueryGantt/releases/download/HEAD/jQueryGantt-1.0.0.dmg&quot;&gt;Mac&lt;/a&gt; or &lt;a href=&quot;https://github.com/daizeng1984/jQueryGantt/releases/download/HEAD/jQueryGantt-1.0.0.x86_64.zip&quot;&gt;Centos&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;findings&quot;&gt;Findings&lt;/h1&gt;
+&lt;p&gt;I assume you know what’s &lt;a href=&quot;https://en.wikipedia.org/wiki/Gantt_chart&quot;&gt;Gantt&lt;/a&gt; chart. &lt;a href=&quot;https://github.com/robicch/jQueryGantt&quot;&gt;jQueryGantt&lt;/a&gt; is an ancient pure front web app of Gantt chart that looks nice. It’s also free, simple and quite easy to use. It’ll be even nicer if it’s native app. At first, I thought I could make a native app out of this pure frontend web app using &lt;a href=&quot;https://github.com/jiahaog/nativefier&quot;&gt;nativefier&lt;/a&gt;. However, it seems not to work as I expected. It still connects to localhost server and cannot save frontend layout page which, in my understanding, is not &lt;em&gt;nativefied&lt;/em&gt;. Plus, save/load is not functional. Ok, there’s no magic for native and free app: we need to manually wrap it up into a fresh handmade &lt;a href=&quot;https://electronjs.org/&quot;&gt;Electron&lt;/a&gt; app with patience. Luckily Electron provides very smooth browser to desktop app (chrome based) migration. After moving &lt;a href=&quot;https://jquery.com/&quot;&gt;jquery&lt;/a&gt; etc. modules in &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;, everything almost works out of box. Nice!&lt;/p&gt;
+
+&lt;h1 id=&quot;keep-fixing&quot;&gt;Keep Fixing&lt;/h1&gt;
+&lt;p&gt;Even though not much migration work, some parts of the software doesn’t work as advertised (buggy) e.g. adding new entry, endless recursion etc.. But since I have source code, I can just fix+use it and later distribute it using &lt;a href=&quot;https://www.electron.build/&quot;&gt;electron.build&lt;/a&gt;. This distribution tool allow you to download and use for &lt;a href=&quot;https://github.com/daizeng1984/jQueryGantt/releases&quot;&gt;free&lt;/a&gt; :raised_hands:!
+For developers, just directly clone &lt;a href=&quot;https://github.com/daizeng1984/jQueryGantt&quot;&gt;this&lt;/a&gt; repo and &lt;code class=&quot;highlighter-rouge&quot;&gt;npm start&lt;/code&gt; your god mod.&lt;/p&gt;</content><author><name></name></author><summary type="html">Wanna a gantt chart editor for free? Download Mac or Centos</summary></entry><entry><title type="html">Clang++</title><link href="/jekyll/update/2018/08/13/clang-llvm.html" rel="alternate" type="text/html" title="Clang++" /><published>2018-08-13T22:54:03-07:00</published><updated>2018-11-06T23:04:08-08:00</updated><id>/jekyll/update/2018/08/13/clang-llvm</id><content type="html" xml:base="/jekyll/update/2018/08/13/clang-llvm.html">&lt;p&gt;gcc is deprecated now. Use clang!&lt;/p&gt;
+
+&lt;h1 id=&quot;gcc-vs-clang&quot;&gt;GCC vs Clang++&lt;/h1&gt;
+&lt;p&gt;Short story: GCC is slow, old (consider compiling a C++17 package in &lt;a href=&quot;https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux&quot;&gt;RHEL&lt;/a&gt;), GPL, not hackable;
+while &lt;a href=&quot;https://clang.llvm.org/&quot;&gt;Clang&lt;/a&gt; changes everyting above plus having its family support from &lt;a href=&quot;https://llvm.org/&quot;&gt;LLVM&lt;/a&gt;.
+If you don’t care about programming at operating system level and don’t need to maintain legacy code that solely relies on GCC, this is definitely a benefitial move.&lt;/p&gt;
+
+&lt;h1 id=&quot;one-button&quot;&gt;One Button&lt;/h1&gt;
+&lt;p&gt;Chandler Carruth’s &lt;a href=&quot;https://youtu.be/uZI_Qla4pNA&quot;&gt;“LLVM: A Modern, Open C++ Toolchain”&lt;/a&gt; is a very nice talk to know more about modern toolchain for C++. What I found inspiring is how &lt;code class=&quot;highlighter-rouge&quot;&gt;modern&lt;/code&gt; clang becomes. Below is a script drawn from the talk to download everything and build your clang from scratch.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-.bash&quot;&gt;git clone git://github.com/ninja-build/ninja.git
+cd ninja
+git checkout release
+./configure.py --bootstrap
+
+cd .. 
+git clone --depth=1 https://llvm.org/git/llvm.git # Don't clone everything
+
+cd llvm/tools 
+git clone --depth=1 https://llvm.org/git/clang.git
+git clone --depth=1 https://llvm.org/git/lld.git
+
+cd clang/tools
+git clone --depth=1 https://llvm.org/git/clang-tools-extra.git extra
+
+cd ../../../projects
+git clone --depth=1 https://llvm.org/git/libcxx.git
+git clone --depth=1 https://llvm.org/git/libcxxabi.git
+git clone --depth=1 https://llvm.org/git/compiler-rt.git 
+
+mkdir build &amp;amp;&amp;amp; cd build
+cmake .. -GNinja  -DCMAKE_MAKE_PROGRAM=$(pwd)/../../ninja/ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/.local/ -DCOMPILER_RT_INCLUDE_TESTS=OFF -DLLVM_ENABLE_ASSERTIONS=OFF
+
+$(pwd)/../../ninja/ninja &amp;amp;&amp;amp; $(pwd)/../../ninja/ninja install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, some finishing touch:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-.bash&quot;&gt;export CXX=$(which clang++)
+export CC=$(which clang)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I actually use this &lt;a href=&quot;&quot;&gt;script&lt;/a&gt; to install Clang in my local dotfiles environment.&lt;/p&gt;
+&lt;h1 id=&quot;compiler-at-your-finger-tip&quot;&gt;Compiler at Your Finger Tip&lt;/h1&gt;
+&lt;p&gt;Now after a few minute wait, you got the new freshly baked c++ compiler. No root permission or any painful dependency packages needed. Even though C++ seems to be the hardest language to apply &lt;a href=&quot;https://buckaroo.pm/&quot;&gt;modern package management&lt;/a&gt;, I still hope C++ community will eventually come up with a &lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt; equivalent public code repo/package manager at least working for most *nix system.&lt;/p&gt;
+
+&lt;h1 id=&quot;side-notes&quot;&gt;Side Notes&lt;/h1&gt;
+&lt;p&gt;If you lead a Pythonful life, to install &lt;code class=&quot;highlighter-rouge&quot;&gt;cmake&lt;/code&gt; you can simply run &lt;code class=&quot;highlighter-rouge&quot;&gt;pip install cmake&lt;/code&gt; and upgrade becomes easier.&lt;/p&gt;</content><author><name></name></author><summary type="html">gcc is deprecated now. Use clang!</summary></entry><entry><title type="html">Simple Parallel</title><link href="/jekyll/update/2018/08/09/simple-parallel.html" rel="alternate" type="text/html" title="Simple Parallel" /><published>2018-08-09T21:51:03-07:00</published><updated>2018-11-06T23:04:08-08:00</updated><id>/jekyll/update/2018/08/09/simple-parallel</id><content type="html" xml:base="/jekyll/update/2018/08/09/simple-parallel.html">&lt;p&gt;&lt;a href=&quot;https://www.npmjs.com/&quot;&gt;npm&lt;/a&gt;’s concurrent script is great! Inspiredly today I just made yet another simple helper script that do similar things and keep everything simple (only bash shell).&lt;/p&gt;
+
+&lt;h1 id=&quot;install&quot;&gt;Install&lt;/h1&gt;
+&lt;p&gt;Just &lt;code class=&quot;highlighter-rouge&quot;&gt;ln&lt;/code&gt; &lt;a href=&quot;https://github.com/daizeng1984/dotfiles/blob/experimental/.local/bin/simple_parallel&quot;&gt;this shell script&lt;/a&gt; and expose it to your path e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/bin&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-.bash&quot;&gt;cd /usr/local/bin &amp;amp;&amp;amp; ln -s $HOME/.dotfiles/misc/simple_parallel.sh simple_parallel &amp;amp;&amp;amp; cd -
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;example&quot;&gt;Example&lt;/h1&gt;
+&lt;p class=&quot;image-caption&quot;&gt;&lt;img src=&quot;/assets/images/blog/2018/simple-parallel-example.png&quot; alt=&quot;Simple Parallel&quot; width=&quot;50%&quot; class=&quot;img-thumbnail center-block&quot; /&gt;
+Run simple_parallel&lt;/p&gt;
+
+&lt;p&gt;That’s right, just type lines of command in your double quote input and it’ll run each of them in parallel. This script only uses the most common commands found in *nix os and you can kill all the process using &lt;kbd&gt;ctrl&lt;/kbd&gt;+&lt;kbd&gt;c&lt;/kbd&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">npm’s concurrent script is great! Inspiredly today I just made yet another simple helper script that do similar things and keep everything simple (only bash shell).</summary></entry><entry><title type="html">How to Cook Soft Chicken</title><link href="/jekyll/update/2018/01/04/soft-chicken.html" rel="alternate" type="text/html" title="How to Cook Soft Chicken" /><published>2018-01-04T16:09:28-08:00</published><updated>2018-01-04T19:16:01-08:00</updated><id>/jekyll/update/2018/01/04/soft-chicken</id><content type="html" xml:base="/jekyll/update/2018/01/04/soft-chicken.html">&lt;p&gt;Chicken breast is rubbery like chewing a deck of paper. But I remembered in China I had quite some dishes that chicken were so tender. Something must be wrong in my cooking knowledge. Let’s fix it.&lt;/p&gt;
+
+&lt;h1 id=&quot;some-ideas&quot;&gt;Some Ideas&lt;/h1&gt;
+&lt;p&gt;There are mainly 2 theories that I find making sense based on my experience:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Cook the chicken slowly and precisely control the temperature of cooking. This make sense because &lt;a href=&quot;https://www.justonecookbook.com/onsen-tamago/&quot;&gt;Onsen Tamago&lt;/a&gt; mainly rely on this technique.&lt;/li&gt;
+  &lt;li&gt;Brining and marinating the chicken in salty/sugary water to break the protein structure (you might think of it as some type of cook) so that this is not normal chicken meat anymore :sweat_smile:. I did this before and it does work. One pros for this technique is that I like meat to be well done in most cases.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;implementation&quot;&gt;Implementation&lt;/h1&gt;
+
+&lt;h1 id=&quot;reference&quot;&gt;Reference&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://cooking.stackexchange.com/questions/13048/how-do-i-cook-a-chicken-to-make-it-really-really-really-soft&quot;&gt;stackexchange&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">Chicken breast is rubbery like chewing a deck of paper. But I remembered in China I had quite some dishes that chicken were so tender. Something must be wrong in my cooking knowledge. Let’s fix it.</summary></entry><entry><title type="html">Snip N Paste</title><link href="/jekyll/update/2018/01/03/snip-n-paste.html" rel="alternate" type="text/html" title="Snip N Paste" /><published>2018-01-03T15:21:54-08:00</published><updated>2018-01-03T17:37:05-08:00</updated><id>/jekyll/update/2018/01/03/snip-n-paste</id><content type="html" xml:base="/jekyll/update/2018/01/03/snip-n-paste.html"></content><author><name></name></author><summary type="html"></summary></entry></feed>

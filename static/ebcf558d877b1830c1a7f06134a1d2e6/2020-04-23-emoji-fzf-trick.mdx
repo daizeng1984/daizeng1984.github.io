@@ -1,0 +1,48 @@
+---
+category: post
+title:  "Fzf Emoji"
+date:   "2020-04-23"
+size: 4
+visible: 1
+---
+
+Fzf + emoji is fun!😆...
+
+# Vim Fzf
+
+A powerful tool that you should know if you use command lines. I assume you know Fzf well and have it working with Vim.
+
+
+# Vim Script
+
+We need a plugin from the same author of Fzf: [Vim-Emoji](https://github.com/junegunn/vim-emoji). However, appreantly author didn't bother to tell the `fzf` flavor of this plugin. So here I am:
+
+You need extra scripts to load all emojis from plugin and dump it to fzf so that you can find your emoji with `fzf`!
+
+```vim
+function! s:getemoji()
+    let keys = emoji#list()
+    let retval = []
+    for e in keys
+        let v = emoji#for(e)
+        call add(retval, e . '=' . v)
+    endfor
+    return retval
+endfunction
+
+function! s:addemoji(line)
+    let arr = split(a:line, '=')
+    execute "normal! a" . arr[1] . "\<Esc>"
+endfunction
+
+command! -nargs=* FzfEmoji call fzf#run({
+            \ 'source': <sid>getemoji(),
+            \ 'sink': function('<sid>addemoji'),
+            \ 'down':    '50%'
+            \})
+
+```
+
+Now go bind `FzfEmoji` and have fun!
+
+For more fzf vim script and plugins, see my fzf [collections](https://github.com/daizeng1984/dotfiles/blob/master/neovim/nvim/config/functions.vimrc#L44-L117).

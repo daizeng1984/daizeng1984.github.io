@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>Water Simulation</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html,fn-in,imgdir:Images/ --> 
+<meta name="src" content="TindsunWater.tex"> 
+<meta name="date" content="2012-11-01 22:09:00"> 
+<link rel="stylesheet" type="text/css" href="TindsunWater.css"> 
+</head><body 
+>
+   <div class="maketitle">
+
+
+
+<h2 class="titleHead">Water Simulation</h2>
+<div class="author" ><span 
+class="cmr-12">Zeng Dai</span></div><br />
+<div class="date" ></div>
+   </div>In this landslide simulation project, we need to simulate the water ripples
+when pebbles roll down to the river. Everything ought to be real time, and some
+parameters for the system could be changed on the fly. For water animation, I
+need to implement physically plausible water whose disturbing position should be
+controlled interactively. After consulting the vogue techniques in current industry
+<a 
+href="#Xtessendorf1999simulating">Tessendorf et&#x00A0;al.</a>&#x00A0;[<a 
+href="#Xtessendorf1999simulating">1999</a>]<a 
+href="#Xjohanson2004real">Johanson and Lejdfors</a><a 
+href="#Xmitchell2005real">Mitchell</a>&#x00A0;[<a 
+href="#Xmitchell2005real">2005</a>]<a 
+href="#Xhinsinger2002interactive">Hinsinger
+et&#x00A0;al.</a>&#x00A0;[<a 
+href="#Xhinsinger2002interactive">2002</a>]<a 
+href="#Xmittring2007finding">Mittring</a>&#x00A0;[<a 
+href="#Xmittring2007finding">2007</a>], I decided to use height map (2D grid) since 2D
+wave equation recursive algorithm basically would stably provide plausible
+shallow water ripples, while FFT was not on my list for its uncontrollable trait.
+The spray is simulated via particle system <a 
+href="#Xjensen2001deep">Jensen and Golias</a>&#x00A0;[<a 
+href="#Xjensen2001deep">2001</a>]. To
+implement big breaking wave due to landslide, I chose to apply an old
+procedural way <a 
+href="#Xjeschke2003procedural">Jeschke et&#x00A0;al.</a>&#x00A0;[<a 
+href="#Xjeschke2003procedural">2003</a>] to achieve interactive rate for efficiency
+consideration. For water rendering, to simulate the dirty water in real
+Yangtze River, I used pre-computed Fresnel coefficient to implement
+it.
+<!--l. 27--><p class="indent" >   For some reason, I could just show the images of the wavy river. The program
+cannot work without Gamebryo Engine 2.5. <hr class="figure"><div class="figure" 
+>
+
+<a 
+ id="x1-21"></a>
+
+
+<!--l. 29--><p class="noindent" ><img 
+src="images/TindWater.jpg" alt="PIC"  
+>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;1: </span><span  
+class="content">Water </span></div><!--tex4ht:label?: x1-21 -->
+
+<!--l. 31--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 32--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+
+<a 
+ id="x1-32"></a>
+
+
+<!--l. 33--><p class="noindent" ><img 
+src="images/TindWater2.jpg" alt="PIC"  
+>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;2: </span><span  
+class="content">Water2 </span></div><!--tex4ht:label?: x1-32 -->
+
+<!--l. 35--><p class="indent" >   </div><hr class="endfigure">
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>References</h3>
+<!--l. 1--><p class="noindent" >
+  <div class="thebibliography">
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xhinsinger2002interactive"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>D.&#x00A0;Hinsinger,  F.&#x00A0;Neyret,  and  M.P.  Cani.    Interactive  animation  of
+  ocean waves. In <span 
+class="cmti-10x-x-109">Proceedings of the 2002 ACM SIGGRAPH/Eurographics</span>
+  <span 
+class="cmti-10x-x-109">symposium on Computer animation</span>, pages 161&#8211;166. ACM, 2002.  ISBN
+  1581135734.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xjensen2001deep"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>L.S. Jensen and R.&#x00A0;Golias.  Deep-water animation and rendering.  In
+  <span 
+class="cmti-10x-x-109">Game Developers Conference (Gamasutra)</span>, 2001.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xjeschke2003procedural"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>S.&#x00A0;Jeschke,  H.&#x00A0;Birkholz,  and  H.&#x00A0;Schmann.   A  procedural  model  for
+  interactive animation of breaking ocean waves.  In <span 
+class="cmti-10x-x-109">Computer Graphics</span>
+  <span 
+class="cmti-10x-x-109">Posters Proceedings</span>. Citeseer, 2003.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xjohanson2004real"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>C.&#x00A0;Johanson and C.&#x00A0;Lejdfors.  Real-time water rendering.  <span 
+class="cmti-10x-x-109">Master of</span>
+  <span 
+class="cmti-10x-x-109">science thesis</span>.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xmitchell2005real"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>J.L. Mitchell.  Real-time synthesis and rendering of ocean water.  In <span 
+class="cmti-10x-x-109">In</span>
+  <span 
+class="cmti-10x-x-109">ATI Research Technical Report. Marlboro</span>. Citeseer, 2005.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xmittring2007finding"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>M&#x00A0;Mittring. Finding next gen: Cryengine 2. page 121. ACM, 2007.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="Xtessendorf1999simulating"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>J.&#x00A0;Tessendorf et&#x00A0;al. Simulating ocean water. <span 
+class="cmti-10x-x-109">SIGGRAPH course notes</span>,
+  2, 1999.
+</p>
+  </div>
+    
+</body></html> 
+
+
+

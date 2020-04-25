@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <link href="/assets/built/jekyll-style.css" rel="stylesheet">
+          <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Revisit Conda</title>
+  <meta name="description" content="Conda is not just for Python.">
+
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel='stylesheet' href='/css/terminal.css'>  
+
+  <script defer type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?..."></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+  messageStyle: "none"
+});
+  </script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/jekyll/update/2018/11/18/conda-everything.html">
+  <link rel="alternate" type="application/rss+xml" title="Zeng&#39;s Home Page" href="/feed.xml">
+
+  
+
+    </head>
+
+  <body style="overflow: hidden;">
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      
+    
+
+
+
+<header id="header" class="mdl-layout__header mdl-layout__header--fixed-header portfolio-header ">
+    <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+        <span class="mdl-layout__title">
+            <div class="portfolio-logo"></div>
+        </span>
+        <span class="mdl-layout__title portfolio-title">
+            Zeng's Home Page
+        </span>
+        
+        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font col-md-6 col-lg-9">
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" style="color:black;text-decoration:none;" href="/">Home</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" style="color:black;text-decoration:none;" href="/project/">Project</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" style="color:black;text-decoration:none;" href="/blog/">Blog</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" style="color:black;text-decoration:none;" href="/about/">About</a>
+            
+          
+        </nav>
+        <div style="font-size:30px;margin-left:5px;">
+        <a class="fa fa-github-alt falink" aria-hidden="true" href="https://github.com/daizeng1984"></a>
+        <a class="fa fa-linkedin-square falink" aria-hidden="true" href="https://www.linkedin.com/in/zeng-dai-3950a245/"></a>
+        <a class="fa fa-facebook-official falink" aria-hidden="true" href="https://www.facebook.com/zeng.dai"></a>
+        </div>
+    </div>
+    <!-- <div class="blurheader"> -->
+    <!-- </div> -->
+    <div class="mdl-layout__title portfolio-title mdl-layout--small-screen-only">
+        Zeng's Home Page
+    </div>
+    <div id="header-background" class="portfolio-background">
+    </div>
+</header>
+<div class="mdl-layout__drawer mdl-layout--small-screen-only">
+    <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" href="/">Home</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" href="/project/">Project</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" href="/blog/">Blog</a>
+            
+          
+            
+            
+            <a class="mdl-navigation__link mdl-button mdl-js-button" href="/about/">About</a>
+            
+          
+    </nav>
+</div>
+
+
+    <main class="mdl-layout__content page-content" aria-label="Content">
+      <div>
+          <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                  <div class="mdl-card__media main-header">
+                      
+                      <h2 class="mdl-card__title-text main-title"><i class="fa fa-window-maximize" aria-hidden="true"></i></h2>
+                      
+                  </div>
+                  <div class="mdl-grid mdl-cell--12-col portfolio-copy">
+    
+    
+    
+    
+    
+    
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+        <header class="post-header">
+            <h1 class="post-title" itemprop="name headline">Revisit Conda</h1>
+            <p class="post-meta">
+                <time datetime="2018-11-18T16:17:34-08:00" itemprop="datePublished">
+                    
+                    Nov 18, 2018
+                </time>
+                </p>
+        </header>
+
+        <div class="post-content" itemprop="articleBody">
+            <p>Conda is not just for Python.</p>
+
+<h1 id="conda">Conda</h1>
+<p>Conda is a cross-platform, language-agnostic binary package manager. Shame for me <img class="emoji" title=":worried:" alt=":worried:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f61f.png" height="20" width="20">, it’s there for years, but only recently I’ve realized how awesome it is! Maybe Anaconda’s daunting fat distribution scares away people like me. Anyhow, with <a href="https://conda.io/miniconda.html">MiniConda</a> you can manage virtual environment of your *nix packages. If you works on app level development (not OS related), you can easily make almost every standard linux dev package <code class="highlighter-rouge">virtual</code>. This is super useful if you’re not sudoer or in big tech giants (which usually has their own package mangers) but want to do something big or you don’t like heavy rocket-launcher solutions (<a href="https://www.docker.com/">Docker</a>/<a href="https://en.wikipedia.org/wiki/Virtual_machine">VirtualMachine</a>). Actually, inside conda’s <code class="highlighter-rouge">x86_64-conda_*-linux-gnu/sysroot</code>, you can build your own *nix kingdom or miniverse.</p>
+
+<p class="image-caption"><img src="/assets/images/blog/2018/miniverse.png" alt="miniverse" width="50%" class="img-thumbnail center-block">
+A miniverse, from <a href="http://rickandmorty.wikia.com/wiki/The_Ricks_Must_Be_Crazy">Rick and Morty</a></p>
+
+<h1 id="use-conda-for-everything">Use Conda for Everything</h1>
+<p>I’ve found a lot packages in anaconda shopping mall: <strong>zsh, clang, cmake, libtool, autoconfig, nodejs, ruby, openjdk</strong>… all linux toolchains and packages you could image. Vendor like <code class="highlighter-rouge">conda-forge</code> makes a lot of recipes, got to check it out. Next time when you want to <em>brew/apt/yum install</em>, you should first check if you can do it in conda elegantly. The good things is that you don’t need to messing around with folders like <code class="highlighter-rouge">/usr/bin</code> etc. and you can easily revert to your previous install revisions. Excited by this finding, I’ve migrated all my old install <a href="https://github.com/daizeng1984/dotfiles/blob/experimental/installConda.sh">scripts</a> just to use conda so that my environment is more independent.</p>
+
+<h1 id="what-no-recent-neovim">What? no recent neovim?</h1>
+<p>In anaconda, I can only find python package instead of native neovim app I need. There are some native neovim build but mostly outdated. One of the greatest things about conda ecosystem is: if some package’s missing, you can build it from source and then share it on Anaconda store. Everyone else benefits by saving a lot of build/release time. 
+Build conda packages is so <a href="http://mlg.eng.cam.ac.uk/hoffmanm/blog/2016-02-25-conda-build/">easy</a>. Always remember <code class="highlighter-rouge">conda-forge</code> is one of the most resourceful channels. After some searching, you could write your first build <a href="script">script</a> for neovim quickly. Then you just do:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda build nvim -c conda-forge
+</code></pre></div></div>
+
+<p>Later install this package locally. In my case, <code class="highlighter-rouge">conda install --use-local</code> doesn’t work, so I used this one <code class="highlighter-rouge">conda install -c file://${CONDA_PREFIX}/conda-bld/&lt;PACKAGENAME&gt;</code>. When build is working, you could upload it for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anaconda login
+anaconda upload ${CONDA_PREFIX}/conda-bld/linux-64/nvim-0.3.1-0.tar.bz2 
+</code></pre></div></div>
+
+<p>Of course, you can do better using <a href="https://en.wikipedia.org/wiki/Continuous_integration">CI</a> like <a href="https://travis-ci.org/">Travis</a> to automate releasing of all platforms. You can also push your recipe to <code class="highlighter-rouge">conda-forge</code> for publish like <a href="https://gist.github.com/zshaheen/fe76d1507839ed6fbfbccef6b9c13ed9">here</a> or <a href="https://gist.github.com/yoavram/05a3c04ddcf317a517d5">here</a></p>
+
+<p>So now everyone who wants neovim in conda could do this in Linux/OSX, <img class="emoji" title=":raised_hands:" alt=":raised_hands:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f64c.png" height="20" width="20">:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda install -y -c daizeng1984 nvim
+</code></pre></div></div>
+
+<h1 id="revisit-my-previous-projects">Revisit My Previous Projects</h1>
+<p>If you worked with Python before, you must remember the nightmare with Python’s native dependencies e.g. <strong>BLAS, OpenLdap, Cyrus-Sasl</strong> etc.. One of my python neovim plugin also has hard-to-get dependency. This sucks and frustrates a lot since we are advertised Python is very cross-platformy. Now with conda, you have more confidence to install all dependencies using merely <code class="highlighter-rouge">conda install</code>. There are still some Python packages (pip) or outlaws that don’t respect conda, and blindly complains about e.g. missing lib’s headers. In this case, we need keep the build folder (–no-clean), add lib and include locations in <code class="highlighter-rouge">setup.cfg</code> and reinstall.</p>
+
+<p>For example, my neovim plugin <a href="https://github.com/daizeng1984/vim-snip-and-paste">Snip-n-Paste</a>, requires <a href="https://pygobject.readthedocs.io/en/latest/getting_started.html">pygobject</a> which usually took quite some time to get it right, but now it’s simply: <code class="highlighter-rouge">conda install -c pkgw-forge -c conda-forge gtk3 pygobject</code>. Another example is installing the servers for LanguageClient e.g. cquery.</p>
+
+<h1 id="cons">Cons?</h1>
+<p>You got me, not perfect at everything, just for open *nix packages. You cannot install OS dependent app e.g. mac store app etc.. There are also some boundaries if you have some outlaw (mostly native code related) apps, e.g. <a href="https://matplotlib.org/faq/osx_framework.html">maplot</a>. In these case, you’re still limited to <code class="highlighter-rouge">brew install</code>, but maybe think about: do you really need these not very portable <code class="highlighter-rouge">bad guys</code>?</p>
+
+<p>conda might as well have issues with versions consistency. You need to choose the reliable channel. But again, when messed up, you can always revert back. To minimize these issues, I’d stick to <code class="highlighter-rouge">conda-forge</code> channel for all dependencies and when necessary, build my own. Therefore, for my conda experience so far, so good.</p>
+
+<p>Of course, conda is not alone. For *nix environment, <a href="https://nixos.org/nix/">Nix</a> as another package manager claims to be as cool as it and it seems to gain a lot of attention recently. However, no matter your choice, it’s good to make your development environment as independent as possible.</p>
+
+        </div>
+
+        
+        
+
+        
+    </article>
+</div>
+
+              </div>
+      </div>
+    <footer class="mdl-mini-footer">
+    <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo" style="color:#9e9e9e">Built with 
+            <div id="thanksto" class="thanksto">
+                <b class="disappear"><i class="fa fa-heart" aria-hidden="true"></i></b>
+                
+                <b class="disappear" href="https://jekyllrb.com/">Jekyll</b>
+                
+                <b class="disappear" href="http://getbootstrap.com/">Bootstrap</b>
+                
+                <b class="disappear" href="https://getmdl.io/">MDL</b>
+                
+                <b class="disappear" href="http://fontawesome.io">FontAwesome</b>
+                
+                <b class="disappear" href="https://www.mathjax.org/">MathJax</b>
+                
+                <b class="disappear" href="https://fslightbox.com/">FSLightbox</b>
+                
+                <b class="disappear" href="https://threejs.org/">ThreeJS</b>
+                
+                <b class="disappear" href="https://www.shadertoy.com/view/XdXcDf">ShaderToy</b>
+                
+                <div id="thanks_to_script"></div>
+            </div>
+        </div>
+    </div>
+    <div class="mdl-mini-footer__right-section">
+        <ul class="mdl-mini-footer__link-list mdl-layout--large-screen-only">
+            
+            <li><a href="mailto:daizeng1984@gmail.com">daizeng1984@gmail.com</a></li>
+            
+            <li>Last Updated: 23-Dec-2018</li>
+        </ul>
+    </div>
+</footer>
+
+    
+    </div>
+
+    <script type="text/javascript" src="/assets/built/jekyll-bundle.js" charset="utf-8"></script>
+
+  </main>
+</div></body>
+
+</html>

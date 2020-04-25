@@ -1,0 +1,509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>Imperfect Shadow Map For Global Illlumination</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html,fn-in,imgdir:Images/ --> 
+<meta name="src" content="ISMReport.tex"> 
+<meta name="date" content="2012-10-31 00:45:00"> 
+<link rel="stylesheet" type="text/css" href="ISMReport.css"> 
+</head><body 
+>
+   <div class="maketitle">
+                                                                     
+
+                                                                     
+                                                                     
+
+                                                                     
+
+<h2 class="titleHead">Imperfect Shadow Map For Global Illlumination</h2>
+<div class="author" ><span 
+class="cmr-12">Dai, Zeng</span></div><br />
+<div class="date" ></div>
+   </div>Imperfect shadow map (ISM)<a 
+href="#X2008-RitschelGroschKimSeidelDachsbacherKautz-">Ritschel et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2008-RitschelGroschKimSeidelDachsbacherKautz-">2008</a>] is a great idea to generate
+multiple shadow map in a single pass. It fully utilizes the virtues of point cloud
+since it&#8217;s very fast to render (rasterize) many points in a single pass and for many
+rendering tasks in global illumination like indirect lighting, we don&#8217;t need
+accurate occlusion query or precise model representation like triangle
+mesh.
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>2012-07-21: Meet Notorious Spike Artifacts</h3>
+<!--l. 67--><p class="noindent" >Also VPL techniques suffers from the &#8220;spike&#8221; artifact (e.g. the bright blotch on
+the curtain, all images above have already been clamped somehow):
+<!--l. 69--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-10011"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 71--><p class="noindent" ><img 
+src="Images/RSM/SponzaSceneNoClamp.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/SponzaSceneClampCorrectlyNoVis.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/SponzaSceneClampCorrectly.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;1: </span><span  
+class="content">The image on the left shows the &#8220;spike&#8221; artifact without clamping
+for each VPL; the image in the center shows tweaked clamp parameter for
+that view even though bright blotch are still noticeable when moving the
+main light source; the image on the right shows the same clamp parameter
+as center image yet with visibility test for each VPL. </span></div><!--tex4ht:label?: x1-10011 -->
+                                                                     
+
+                                                                     
+<!--l. 75--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 77--><p class="indent" >   Click to get <a 
+href="./Demo/ISMDemo3.zip" >ISM demo &amp; source</a>.
+<!--l. 79--><p class="indent" >   Moreover, inadequate VPLs will have the noticeable boundary problem:
+<!--l. 81--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-10022"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 83--><p class="noindent" ><img 
+src="Images/RSM/SponzaNoVis.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/SponzaVisButNotEnoughVpls.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;2: </span><span  
+class="content">The image on the left consider no visibility yet plausible for 8x8
+VPLs; the right one, however, produce shadow map boundary line for each
+VPL. </span></div><!--tex4ht:label?: x1-10022 -->
+                                                                     
+
+                                                                     
+<!--l. 86--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 88--><p class="indent" >   This is partially solved by applying VSM in our demo:
+<!--l. 90--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-10033"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 92--><p class="noindent" ><img 
+src="Images/RSM/ISMVSM.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;3: </span><span  
+class="content">We change imperfect shadow map to imperfect variance shadow
+map. The boundary problem&#8217;s gone and shadow become softer. </span></div><!--tex4ht:label?: x1-10033 -->
+                                                                     
+
+                                                                     
+<!--l. 94--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 96--><p class="indent" >   To solve the noise due to light movement and better sample the VPLs, ISM
+author also have a follow-up work <a 
+href="#X2011-RitschelEisemannHaKimSeidel-">Ritschel et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2011-RitschelEisemannHaKimSeidel-">2011</a>] to eliminate artifact that
+shadow map exists.
+   <h3 class="likesectionHead"><a 
+ id="x1-2000"></a>2012-07-15: Sampling Methods and Sponza</h3>
+<!--l. 99--><p class="noindent" >Now we add color to this cornell box and see what looks like:
+<!--l. 101--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-20014"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 103--><p class="noindent" ><img 
+src="Images/RSM/ColorRSMwithVis8x8correct.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/ColorRSMwithVis16x16fixerror.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;4: </span><span  
+class="content">Left image is using 8x8 uniform VPLs and right image uses 16x16.
+</span></div><!--tex4ht:label?: x1-20014 -->
+                                                                     
+
+                                                                     
+<!--l. 106--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 108--><p class="indent" >   Then we add VPLs presentation to the demo and then compare 4 types of
+&#8220;easy and fast&#8221; sampling techniques as following. <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-20025"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 111--><p class="noindent" ><img 
+src="Images/RSM/SamplingTech-1.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SamplingTech-2.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SamplingTech-3.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SamplingTech-4.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;5: </span><span  
+class="content">Sampling of RSM. Purple point is the sample location. From left
+to right, the first image on the left is uniform grid sampling I used before;
+the second image is normal random uniform sampling; the third image is
+halton sampling; and the last one is importance sampling from SII paper
+<a 
+href="#X2006-DachsbacherStamminger-">Dachsbacher and Stamminger</a>&#x00A0;[<a 
+href="#X2006-DachsbacherStamminger-">2006</a>] </span></div><!--tex4ht:label?: x1-20025 -->
+                                                                     
+
+                                                                     
+<!--l. 116--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 118--><p class="indent" >   Below is their corresponding results (plus VPLs represented as translucent 3d
+arrow) due to different sampling techniques.
+<!--l. 120--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-20036"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 122--><p class="noindent" ><img 
+src="Images/RSM/SceneWSamplingTech-1.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SceneWSamplingTech-2.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SceneWSamplingTech-3.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" > <img 
+src="Images/RSM/SceneWSamplingTech-4.jpg" alt="PIC"  
+width="180.0pt" height="187.72237pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;6: </span><span  
+class="content">Images show scene rendered with different sampling techniques
+as  above.  There&#8217;s  not  much  difference  for  temporal  noise,  even  though
+importance sampling indeed samples better with a little bit extra code. Also
+notice that the artifact that arrows are off plane is due to interpolation of
+the RSM. </span></div><!--tex4ht:label?: x1-20036 -->
+                                                                     
+
+                                                                     
+<!--l. 127--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 129--><p class="indent" >   We also change the scene to more complex one like a slightly modified
+Sponza.
+<!--l. 131--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-20047"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 133--><p class="noindent" ><img 
+src="Images/RSM/SponzaScene1.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/SponzaScene2.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/SponzaSceneVpls.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;7: </span><span  
+class="content">Images show Sponza rendering with the same techniques as above.
+</span></div><!--tex4ht:label?: x1-20047 -->
+                                                                     
+
+                                                                     
+<!--l. 137--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 139--><p class="indent" >   We found the imperfect shadow map can produce plausible AO-like shadow in
+certain corner because the imprecise pull/push phase, however it cannot take
+care of the geometries that need finer detail, e.g. incorrect shadow of
+polar.
+<!--l. 141--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-20058"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 143--><p class="noindent" ><img 
+src="Images/RSM/SponzaSceneCoarse.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;8:  </span><span  
+class="content">Image  shows  artifacts  that  curtain  cannot  cast  shadows  and
+polar&#8217;s shadow makes polar look like flying above ground. </span></div><!--tex4ht:label?: x1-20058 -->
+                                                                     
+
+                                                                     
+<!--l. 145--><p class="indent" >   </div><hr class="endfigure">
+   <h3 class="likesectionHead"><a 
+ id="x1-3000"></a>2012-06-02: Pull/Push and Imperfectness</h3>
+<!--l. 147--><p class="noindent" >The more pull/push level goes, the more darker shadow becomes and
+sometimes pull/push might &#8220;over fill hole&#8221;. The necessary pull/push
+levels depend on the points of one instance of the scene and resolution
+of each VPL&#8217;s shadow map. If we have more points like 5000 for each
+instance of the scene, we&#8217;ll have a much better results for ISM without
+pull/push and pull/push&#8217;s effort to improve the quality of the ISM is
+limited. The ghost edge effect for the ISM as shown below will also be
+reduced.
+<!--l. 149--><p class="indent" >   Next step we test ISM in RSM for indirect one bounce lighting. We chose
+spot light and 5000 points for point cloud sampling. For VPL sampling, right
+now we apply just uniform sampling from RSM.
+<!--l. 151--><p class="indent" >   If we don&#8217;t consider the VPLs lighting intensity, which means VPLs to each
+direction has the same intensity. The line artifact will appear, and I guess it
+might also happen when BRDF is sharp.
+<!--l. 153--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-30019"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 155--><p class="noindent" ><img 
+src="Images/RSM/Artifact_line_probablydueto_light_intensity.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;9:  </span><span  
+class="content">Line  artifact  due  to  uniform  light  intensity  of  VPL  to  each
+direction. </span></div><!--tex4ht:label?: x1-30019 -->
+                                                                     
+
+                                                                     
+<!--l. 157--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 159--><p class="indent" >   With no pull/push process, the VPL visibility test will generate dark spot
+and also light leak.
+<!--l. 161--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-300210"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 163--><p class="noindent" ><img 
+src="Images/RSM/Artifact__uniform_bruteforce_vplssampling.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/Less_clear_line_artifact__no_pullpush.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;10: </span><span  
+class="content">Light leak artifact due to no pull/push. </span></div><!--tex4ht:label?: x1-300210 -->
+                                                                     
+
+                                                                     
+<!--l. 166--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 168--><p class="indent" >   Now, using pull/push, it has better result. However, it still suffer from spatial
+noises due to movement of light. If you move the light in the scene, you could see
+horrible noise like hand-drawing cartoon!
+<!--l. 170--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-300311"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 172--><p class="noindent" ><img 
+src="Images/RSM/RSMNiceTweakedPicture.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/RSM/lessnoise16x16VPLs.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;11: </span><span  
+class="content">An image generated using RSM with ISM as visibility test. Left
+image uses 8x8 VPLs and right image use 16x16 Images. </span></div><!--tex4ht:label?: x1-300311 -->
+                                                                     
+
+                                                                     
+<!--l. 175--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 177--><p class="indent" >   So we guess it might be due to VPL sampling.
+   <h3 class="likesectionHead"><a 
+ id="x1-4000"></a>2012-05-26: Hello, ISM!</h3>
+<!--l. 180--><p class="noindent" >My first implementation is using ISM for area lighting in cornell box. I first
+created multiple instances (16x16 instances for example) of the point cloud of the
+cornell box scene, then used vertex shader to split these instance into
+the same render target thus forming an ISM. The area light is sampled
+uniformly as virtual point lights (VPLs, e.g. 16x16 for 16x16 instances).
+So we could generate direct illumination of the area light like this <a 
+href="#x1-400112">12<!--tex4ht:ref: firstresult --></a>.
+Without explicit indication, we only test our result on my laptop for simple
+scene.
+<!--l. 182--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-400112"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 184--><p class="noindent" ><img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel3.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;12: </span><span  
+class="content">A nice image after we tweak the parameters a little bit, with
+500 points for each cornell box scence, 16x16 VPLs, 1024x1024 ISM.</span></div><!--tex4ht:label?: x1-400112 -->
+                                                                     
+
+                                                                     
+<!--l. 186--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 188--><p class="indent" >   For pull and push phase, I didn&#8217;t follow the pull push paper <a 
+href="#X2007-MarroquimKrausCavalcanti-">Marroquim
+et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2007-MarroquimKrausCavalcanti-">2007</a>] to consider edges since we only need to sample position for depth
+map and actually, precision is not a primary goal in our focus when considering
+indirect light and soft shadows. Pull and push did fixed the hole in a cheap
+way!
+<!--l. 190--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-400213"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 192--><p class="noindent" ><img 
+src="Images/ISMArea/AreaLightCornellBox-NoPullPush-ISM.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel2-ISM.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel3-ISM.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-NoPullPush-NoFormFactor.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel2-NoFormFactor.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel3-NoFormFactor.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-NoPullPush.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel2.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel3.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;13: </span><span  
+class="content">Three ISMs. The left image is ISM without pull/push; the middle
+image is ISM with pull and push that goes only 2 levels; and the right image
+is ISM with pull and push that goes 3 levels. All of them are in the same
+setting as Fig.1 </span></div><!--tex4ht:label?: x1-400213 -->
+                                                                     
+
+                                                                     
+<!--l. 202--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 204--><p class="indent" >   The multiple texture indexing (e.g. 16x16 times&#8217; texture2D for 16x16 VPLs)
+is really costy. Multiple instances of the point cloud is not an performance issue.
+How can we reduce the texture index times in the pixel shader? Can we group
+them into a hierarchical tree?
+<!--l. 207--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                     
+
+                                                                     
+<a 
+ id="x1-400314"></a>
+                                                                     
+
+                                                                     
+
+<!--l. 209--><p class="noindent" ><img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel3.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" > <img 
+src="Images/ISMArea/AreaLightCornellBox-PullPushLevel2-5000point.jpg" alt="PIC"  
+width="360.0pt" height="375.46263pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;14: </span><span  
+class="content">Compare ISM with 500 points with pull push level at 3 and 5000
+points with pull push level at only 2. Please ignoring the FPS, since I take
+the new image from a desktop computer.</span></div><!--tex4ht:label?: x1-400314 -->
+                                                                     
+
+                                                                     
+<!--l. 212--><p class="indent" >   </div><hr class="endfigure">
+   <h3 class="likesectionHead"><a 
+ id="x1-5000"></a>References</h3>
+<!--l. 1--><p class="noindent" >
+  <div class="thebibliography">
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2006-DachsbacherStamminger-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>C&#x00A0;Dachsbacher  and  M&#x00A0;Stamminger.   Splatting  indirect  illumination.
+  page 100. ACM, 2006.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2007-MarroquimKrausCavalcanti-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>R.&#x00A0;Marroquim, M.&#x00A0;Kraus, and P.R. Cavalcanti.  Efficient point-based
+  rendering  using  image  reconstruction.   In  <span 
+class="cmti-10x-x-109">PBG07:  Proceedings  of  the</span>
+  <span 
+class="cmti-10x-x-109">Eurographics Symposium on Point-Based Graphics</span>, pages 101&#8211;108, 2007.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2008-RitschelGroschKimSeidelDachsbacherKautz-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>T.&#x00A0;Ritschel, T.&#x00A0;Grosch, M.H. Kim, H.P. Seidel, C.&#x00A0;Dachsbacher, and
+  J.&#x00A0;Kautz.  Imperfect shadow maps for efficient computation of indirect
+  illumination. <span 
+class="cmti-10x-x-109">ACM Trans. Graph</span>, 27(5):129, 2008.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2011-RitschelEisemannHaKimSeidel-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>T.&#x00A0;Ritschel, E.&#x00A0;Eisemann, I.&#x00A0;Ha, J.D.K. Kim, and H.P. Seidel. Making
+  imperfect shadow maps view-adaptive: High-quality global illumination
+  in large dynamic scenes.   In <span 
+class="cmti-10x-x-109">Computer Graphics Forum</span>. Wiley Online
+  Library, 2011.
+</p>
+  </div>
+    
+</body></html> 
+
+                                                                     
+
+

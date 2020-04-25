@@ -1,0 +1,40 @@
+{
+  "name": "jekyll-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"./node_modules/.bin/webpack --watch\" \"bundle exec jekyll serve\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "./node_modules/.bin/webpack  --config webpack.prod.config.js && bundle exec jekyll build"
+  },
+  "author": "Zeng Dai",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "bootstrap": "^4.3.1",
+    "concurrently": "^4.1.0",
+    "css-loader": "^2.1.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^3.0.1",
+    "font-awesome": "^4.7.0",
+    "fslightbox": "^1.7.0",
+    "glslify-loader": "^2.0.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "material-design-lite": "^1.3.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "raw-loader": "^2.0.0",
+    "react": "^16.8.6",
+    "react-addons-update": "^15.6.2",
+    "react-dom": "^16.8.6",
+    "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^1.2.3",
+    "three": "^0.104.0",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2"
+  }
+}

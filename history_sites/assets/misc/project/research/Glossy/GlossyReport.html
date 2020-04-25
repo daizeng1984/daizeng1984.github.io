@@ -1,0 +1,642 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>Glossy Effects In Global Illumination</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html --> 
+<meta name="src" content="GlossyReport.tex"> 
+<meta name="date" content="2012-11-16 17:21:00"> 
+<link rel="stylesheet" type="text/css" href="GlossyReport.css"> 
+</head><body 
+>
+   <div class="maketitle">
+                                                                          
+
+                                                                          
+                                                                          
+
+                                                                          
+
+<h2 class="titleHead">Glossy Effects In Global Illumination</h2>
+<div class="author" ><span 
+class="cmr-12x-x-120">Dai, Zeng</span></div><br />
+<div class="date" ></div>
+   </div>
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>2012-11-14</h3>
+<!--l. 65--><p class="noindent" >I come up an idea: to compensate the geometry information lost during
+rasterization (since we only use G-buffer for ray tracing), we just need to add
+extra sample points around where geometry information lost most severely,
+e.g. where the depth map&#8217;s variation exceed a threshold. This idea seem
+to work at my first glance, I tried out some experiement to show where
+geometry information are lost. Are they really around the depth map&#8217;s
+edge area (whose variation exceed a threshold)? Let&#8217;s see the pictures
+below:
+<!--l. 67--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-10011"></a>
+                                                                          
+
+                                                                          
+<div class="center" 
+>
+<!--l. 68--><p class="noindent" >
+
+<!--l. 69--><p class="noindent" ><img 
+src="Images/DepthVariationvsGeometryInformationLost-Cornell.png" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/DepthVariationvsGeometryInformationLost-CornellBad.png" alt="PIC"  
+width="390.0pt" height="406.75366pt" ><br />
+<img 
+src="Images/DepthVariationvsGeometryInformationLost-SponzaGood.png" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/DepthVariationvsGeometryInformationLost-SponzaBad.png" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/DepthVariationvsGeometryInformationLost-SponzaBadBad.png" alt="PIC"  
+width="390.0pt" height="406.75366pt" ></div>
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;1: </span><span  
+class="content">These are pictures shows where geometry information are lost.
+Green  fragments  only  need  geometry  that  can  be  seen  by  viewer  (or
+rasterized G-buffer); red fragements need geometry information hidden after
+rasterization. As shown above, these images show two different scene and
+different glossiness. It is not hard to identify their glossiness. Disappointed
+enough, some red fragments appears on smooth varying plane. For example,
+if you see the floor of the sponza image on the right, you could see the plane
+have a large part of red area. </span></div><!--tex4ht:label?: x1-10011 -->
+                                                                          
+
+                                                                          
+<!--l. 78--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 80--><p class="indent" >   Unfortunately, my idea breaks for simple geometry like floor and plane in
+sponza, despite that you could see some red area indeed overlay with the edge of
+depth buffer. However, I still wonder if we could use image space to do some
+interesting stuff.
+   <h3 class="likesectionHead"><a 
+ id="x1-2000"></a>2012-10-29:</h3>
+<!--l. 84--><p class="noindent" >Now the bug due to environment map of image space glossy is solved. However, I
+got a problem when transforming the vector and traverse it in NDC space. It just
+doesn&#8217;t give me a satisfying result. The brute force searching method might
+indicate that transformation of the vector is not correct. I guess I need to write a
+debug function that allows analysis of the image information. This debug function
+will take textures of direction and position etc. as input and display these
+information in 3d world.
+<!--l. 86--><p class="indent" >   However, brute force method shows how image space are vulnerable to
+temporal changes on image space space ignoring the other artifacts like
+halo.
+<!--l. 88--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-20012"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 90--><p class="noindent" ><img 
+src="Images/ISBruteForceArtifact-1.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/ISBruteForceArtifact-2.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;2: </span><span  
+class="content">I simply move the camera a little bit, producing the two continuous
+frame images (left and right). Notice the yellow box&#8217;s color is significantly
+changed  between  these  frames.  It  get  more  noising  when  increase  the
+glossiness from current 16 to higher. NO, NO, NO... Don&#8217;t look at the FPS
+:-P! </span></div><!--tex4ht:label?: x1-20012 -->
+                                                                          
+
+                                                                          
+<!--l. 93--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 95--><p class="indent" >   I spent some time to think about the image space&#8217;s techniques. Precise
+intersection might not be a good way for precise reflection. Reflection needs high
+frequency information of the scene, therefore it will be sensitive to image space&#8217;s
+change. As cone trace further, the geometry information gets more blurry. How to
+compensate the information lost in image space is essential. Next step is try to
+use cone tracing to replace the multiple samples like we did in rough
+refraction.
+<!--l. 97--><p class="indent" >   Paper read these weeks:<br 
+class="newline" /><a 
+href="#X2011-Jan-">Jan&#x00A0;Novk</a>&#x00A0;[<a 
+href="#X2011-Jan-">2011</a>]<br 
+class="newline" /><a 
+href="#X2008-TevsIhrkeSeidel-a">Tevs et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2008-TevsIhrkeSeidel-a">2008</a>]<br 
+class="newline" /><a 
+href="#X2012-LehtinenAilaLaineDurand-">Lehtinen et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2012-LehtinenAilaLaineDurand-">2012</a>]<br 
+class="newline" />and some technical articles in GPU Gem etc. about ray height field intersection.
+   <h3 class="likesectionHead"><a 
+ id="x1-3000"></a>2012-10-15:</h3>
+<!--l. 113--><p class="noindent" >I added ground truth to ISM demo for better comparison. For direct light lit area,
+I didn&#8217;t utilize reflective shadow map information for better sampling, so I simply
+sample based only on BRDF importance. This is convenient and just like
+non-explicit ray tracer, however, it makes the indirect illumination darker and
+noisier. With enough sampling, the noise disappears. Multiple bounces
+(traverse depth in UI) of light will increase the intensity of whole scene as I
+expected.
+<!--l. 115--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-30013"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 117--><p class="noindent" ><img 
+src="Images/GlossyISM.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/Glossy16GroundTruth-Depth.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/Glossy16GroundTruth-Depth2.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;3: </span><span  
+class="content">First image is real time imperfect shadow map; second image is
+ground truth with one bounce; third image is ground truth with two bounce.
+I didn&#8217;t measure the samples for the 2 images. It takes about one minutes
+or two to converge to them. The phong glossiness coefficient is 16. There are
+1024 VPLs. </span></div><!--tex4ht:label?: x1-30013 -->
+                                                                          
+
+                                                                          
+<!--l. 121--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 123--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-30024"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 125--><p class="noindent" ><img 
+src="Images/DiffuseISM.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/DiffuseGroundTruth-Depth.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/DiffuseGroundTruth-Depth2.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;4: </span><span  
+class="content">First image is real time imperfect shadow map; second image is
+ground truth with one bounce; third image is ground truth with two bounce.
+It takes about one minutes or two to converge to them. The phong glossiness
+coefficient is 0 (diffuse). There are only 64 VPLs.</span></div><!--tex4ht:label?: x1-30024 -->
+                                                                          
+
+                                                                          
+<!--l. 129--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 132--><p class="indent" >   Here are some comments:
+      <ul class="itemize1">
+      <li class="itemize">The corner area of the box touching the floor, is much brighter than real
+      time demo even without imperfect shadow map. This might means we
+      lose energy because of clamp. VPL sampling requires us to distribute
+      light energy to finite numbers of points. Corner area definitely needs
+      more sampling.I think these corner brighter area can be better approach
+      with image-space methods.
+      </li>
+      <li class="itemize">The corner of the box has very sharp color if we increase the depth to
+      be larger than 1.
+      </li>
+      <li class="itemize">Ceiling in ISM implementation has a brighter illumination from top of
+      the yellow box. I didn&#8217;t know why at this point, but my guess is due
+      to clamp formulas.
+      </li>
+      <li class="itemize">When glossiness increases, the VPL artifact will become more horrible
+      and the whole scene gets darker.</li></ul>
+<!--l. 140--><p class="indent" >   For image space glossy, right now, the multiple sampler just doesn&#8217;t
+work.
+   <h3 class="likesectionHead"><a 
+ id="x1-4000"></a>2012-10-01:</h3>
+<!--l. 143--><p class="noindent" >I made a slight modification to my ISM demo to support glossy GI. The result
+looks horrible like image-space technique. Due to discrete nature of VPLs, it
+produces a lot of light blotch. Ordinary clamp doesn&#8217;t work in this case (Fig.<a 
+href="#x1-40015">5<!--tex4ht:ref: ISMGlossyArtifact --></a>).
+<hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-40015"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 146--><p class="noindent" ><img 
+src="Images/GlossyArtifacts.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/GlossyArtifacts2.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;5: </span><span  
+class="content">Notorious light blotch artifact becomes more noising for glossy
+materials. Roughness or specular power is simply 16. </span></div><!--tex4ht:label?: x1-40015 -->
+                                                                          
+
+                                                                          
+<!--l. 149--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 151--><p class="indent" >   Increasing VPLs does improve a little bit as in Fig.<a 
+href="#x1-40026">6<!--tex4ht:ref: VPLImproveGlossyALittle --></a>.
+<!--l. 153--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-40026"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 155--><p class="noindent" ><img 
+src="Images/GlossyAddVPL8x8.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/GlossyAddVPL16x16.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/GlossyAddVPL32x32.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;6: </span><span  
+class="content">From left to right, the VPL numbers are 64, 256, 1024 respectively
+with specular power 16. </span></div><!--tex4ht:label?: x1-40026 -->
+                                                                          
+
+                                                                          
+<!--l. 159--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 161--><p class="indent" >   Perhaps importance wrap for shadow map can increase the precision a little
+bit. Using a more sophisticated gathering might be better for glossy GI as in
+<a 
+href="#X2009-RitschelEngelhardtGroschSeidelKautzDachsbacher-">Ritschel et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2009-RitschelEngelhardtGroschSeidelKautzDachsbacher-">2009</a>]. These papers <a 
+href="#X2011-CrassinNeyretSainzGreenEisemann-">Crassin et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2011-CrassinNeyretSainzGreenEisemann-">2011</a>] <a 
+href="#X2012-TokuyoshiOgaki-">Tokuyoshi and
+Ogaki</a>&#x00A0;[<a 
+href="#X2012-TokuyoshiOgaki-">2012</a>] also addresses glossy GI for real time applications.
+   <h3 class="likesectionHead"><a 
+ id="x1-5000"></a>2012-09-03:</h3>
+<!--l. 165--><p class="noindent" >While still trying to find a &#8220;better&#8221; way to do ray intersection in image space for
+glossy, I had a look at voxelization via GPU. It doesn&#8217;t mean anything related to
+my research on glossy now, so I did it just for interest of learning the
+imageLoad/imageStore in GPU shader mode 5. Inspired by the <a 
+href="http://www.seas.upenn.edu/~pcozzi/OpenGLInsights/OpenGLInsights-SparseVoxelization.pdf" >chapter 22 of
+OpenGL Insights</a>, I implemented a simpler and similar voxel renderer that get an
+obj file as input mesh then output to a 3d textures or voxels (it doesn&#8217;t fill inner
+voxels inside the mesh now). After voxelization, I displayed it in using ray
+marching (we sample points along every eye ray with equal step between these
+points then add them up) and instanced cubes with very naive ambient occlusion
+(we draw one cube to represent each voxel if the voxel is occupied, then for
+each cube vertex, we compute the occlusion based on the nearby voxels&#8217;
+occupations).
+<!--l. 168--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-50017"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 170--><p class="noindent" ><img 
+src="Images/voxCow64x64.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/voxCow128x128.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/voxCow256x256.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;7: </span><span  
+class="content">Left image is cow with 64x64x64 voxels display using instanced
+cubes; middle image is cow with 128x128x128 voxels with the same settings;
+right image is cow with 256x256x256 voxels with the same settings. </span></div><!--tex4ht:label?: x1-50017 -->
+                                                                          
+
+                                                                          
+<!--l. 174--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 176--><p class="indent" >   Here I also show some random funny image of displaying voxels using ray
+marching:
+<!--l. 178--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-50028"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 180--><p class="noindent" ><img 
+src="Images/VoxSphere.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/VoxSphereCube.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;8: </span><span  
+class="content">BTW, these 3d textures are constructed voxel by voxel in CPU. </span></div><!--tex4ht:label?: x1-50028 -->
+                                                                          
+
+                                                                          
+<!--l. 183--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 185--><p class="indent" >   Dragon mesh using ray marching and instanced cubes:
+<!--l. 187--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-50039"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 189--><p class="noindent" ><img 
+src="Images/voxDragonRayMarching.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/voxDragon.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;9: </span><span  
+class="content">Dragon mesh. </span></div><!--tex4ht:label?: x1-50039 -->
+                                                                          
+
+                                                                          
+<!--l. 192--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 194--><p class="indent" >   Click to get this simple <a 
+href="./SourceDemo/VoxelRenderer.zip" >demo &amp; source</a>.
+<!--l. 196--><p class="indent" >   Here are some papers I read recently for glossy:<br 
+class="newline" /><a 
+href="#X2006-EstalellaMartinDrettakisTost-">Estalella et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2006-EstalellaMartinDrettakisTost-">2006</a>]<br 
+class="newline" /><a 
+href="#X1998-OfekRappoport-">Ofek and Rappoport</a>&#x00A0;[<a 
+href="#X1998-OfekRappoport-">1998</a>]<br 
+class="newline" /><a 
+href="#X2000-ChenArvo-">Chen and Arvo</a>&#x00A0;[<a 
+href="#X2000-ChenArvo-">2000</a>]<br 
+class="newline" /><a 
+href="#X2000-KautzMcCool-">Kautz and McCool</a>&#x00A0;[<a 
+href="#X2000-KautzMcCool-">2000</a>]
+   <h3 class="likesectionHead"><a 
+ id="x1-6000"></a>2012-08-27:</h3>
+<!--l. 204--><p class="noindent" >So my first idea is very simple. We did image space refraction and rough
+refraction. Why don&#8217;t we do image space reflection or rough reflection? GPU has
+been powerful to do simple ray matching for quite a few years. We could use what
+we did for refraction (intersect ray with back surface) for reflection! The biggest
+problem is image space after rasterization might lose geometry information,
+e.g. the wall behind the camera, or geometry totally blocked by other
+geometry.
+<!--l. 206--><p class="indent" >   Here&#8217;re some test results:
+<!--l. 208--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-600110"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 210--><p class="noindent" ><img 
+src="Images/ISGlossy-64.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/ISGlossy-2938.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;10: </span><span  
+class="content">All images are test scenes with only albedo light plus its reflected
+light from nearby geometries&#8217; albedo light in image space. If reflected rays
+cannot intersect with geometries in image space, then we just shoot it to an
+environment map to get color. Left image has glossiness of 64 while right one
+has 2938. </span></div><!--tex4ht:label?: x1-600110 -->
+                                                                          
+
+                                                                          
+<!--l. 213--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 215--><p class="indent" >   The biggest problem seems to be a severe problem:
+<!--l. 217--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-600211"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 219--><p class="noindent" ><img 
+src="Images/GlossyTestSevereArtifact-1.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" > <img 
+src="Images/GlossyTestSevereArtifact-2.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;11: </span><span  
+class="content">As we presume, when camera changes a little bit as shown by
+the two continuous frame images, the reflection of the left side of the yellow
+box flickers even when we have a very rough Phong lobe (glossiness 32) in
+this case. </span></div><!--tex4ht:label?: x1-600211 -->
+                                                                          
+
+                                                                          
+<!--l. 222--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 224--><p class="indent" >   Again I get horrible flickering in sponza scene:
+<!--l. 227--><p class="indent" >   <hr class="figure"><div class="figure" 
+>
+                                                                          
+
+                                                                          
+<a 
+ id="x1-600312"></a>
+                                                                          
+
+                                                                          
+
+<!--l. 229--><p class="noindent" ><img 
+src="Images/ISGlossy-sponza.jpg" alt="PIC"  
+width="390.0pt" height="406.75366pt" >
+<br /> <div class="caption" 
+><span class="id">Figure&#x00A0;12: </span><span  
+class="content">An image using sponza scene. Image quality is not quite good. </span></div><!--tex4ht:label?: x1-600312 -->
+                                                                          
+
+                                                                          
+<!--l. 231--><p class="indent" >   </div><hr class="endfigure">
+<!--l. 233--><p class="indent" >   Here are some papers I read recently for glossy:<br 
+class="newline" /><a 
+href="#X2009-RobisonShirley-">Robison and Shirley</a>&#x00A0;[<a 
+href="#X2009-RobisonShirley-">2009</a>]<br 
+class="newline" /><a 
+href="#X2010-DuvenhageBouatouchKourie-">Duvenhage et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2010-DuvenhageBouatouchKourie-">2010</a>]<br 
+class="newline" /><a 
+href="#X2008-YuWangYu-">Yu et&#x00A0;al.</a>&#x00A0;[<a 
+href="#X2008-YuWangYu-">2008</a>]<br 
+class="newline" /><a 
+href="#X2009-LaurijssenDutre-">Laurijssen and Dutré</a>&#x00A0;[<a 
+href="#X2009-LaurijssenDutre-">2009</a>]<br 
+class="newline" /><a 
+href="#X2001-GranierDrettakis-a">Granier and Drettakis</a>&#x00A0;[<a 
+href="#X2001-GranierDrettakis-a">2001</a>]<br 
+class="newline" /><a 
+href="#X1993-AupperleHanrahan-a">Aupperle and Hanrahan</a>&#x00A0;[<a 
+href="#X1993-AupperleHanrahan-a">1993</a>]<br 
+class="newline" />
+   <h3 class="likesectionHead"><a 
+ id="x1-7000"></a>References</h3>
+<!--l. 1--><p class="noindent" >
+  <div class="thebibliography">
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X1993-AupperleHanrahan-a"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>L.&#x00A0;Aupperle  and  P.&#x00A0;Hanrahan.   Importance  and  discrete  three  point
+  transport.    In  <span 
+class="cmti-12">Proceedings  of  the  Fourth  Eurographics  Workshop  on</span>
+  <span 
+class="cmti-12">Rendering</span>, pages 85&#8211;94. Citeseer, 1993.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2000-ChenArvo-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>M.&#x00A0;Chen and J.&#x00A0;Arvo.  Perturbation methods for interactive specular
+  reflections. <span 
+class="cmti-12">Visualization and Computer Graphics, IEEE Transactions on</span>,
+  6(3):253&#8211;264, 2000.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2011-CrassinNeyretSainzGreenEisemann-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>C.&#x00A0;Crassin,                          F.&#x00A0;Neyret,                          M.&#x00A0;Sainz,
+  S.&#x00A0;Green, and E.&#x00A0;Eisemann. Interactive indirect illumination using voxel
+  cone tracing. In <span 
+class="cmti-12">Computer Graphics Forum</span>, volume&#x00A0;30, pages 1921&#8211;1930.
+  Wiley Online Library, 2011.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2010-DuvenhageBouatouchKourie-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>B.&#x00A0;Duvenhage,  K.&#x00A0;Bouatouch,  and  D.&#x00A0;Kourie.   Exploring  the  use  of
+  glossy light volumes for interactive global illumination.  In <span 
+class="cmti-12">Proceedings of</span>
+  <span 
+class="cmti-12">the 7th International Conference on Computer Graphics, Virtual Reality,</span>
+  <span 
+class="cmti-12">Visualisation and Interaction in Africa</span>, pages 139&#8211;148. ACM, 2010.
+                                                                          
+
+                                                                          
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2006-EstalellaMartinDrettakisTost-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>P&#x00A0;Estalella, I&#x00A0;Martin, G&#x00A0;Drettakis, and D&#x00A0;Tost. A gpu-driven algorithm
+  for  accurate  interactive  reflections  on  curved  objects.     <span 
+class="cmti-12">Rendering</span>
+  <span 
+class="cmti-12">Techniques</span>, 6, 2006.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2001-GranierDrettakis-a"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>X.&#x00A0;Granier and G.&#x00A0;Drettakis. Incremental updates for rapid glossy global
+  illumination.  In <span 
+class="cmti-12">Computer Graphics Forum</span>, volume&#x00A0;20, pages 268&#8211;277.
+  Wiley Online Library, 2001.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2011-Jan-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>Carsten&#x00A0;Dachsbacher Jan&#x00A0;Novk, Thomas&#x00A0;Engelhardt. Screen-space bias
+  compensation for interactive high-quality global illumination with virtual
+  point lights. <span 
+class="cmti-12">ACM SIGGRAPH Interactive 3D Graphics and Games 2011</span>,
+  2011.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2000-KautzMcCool-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>J&#x00A0;Kautz  and  MD&#x00A0;McCool.   Approximation  of  glossy  reflection  with
+  prefiltered environment maps. pages 119&#8211;126. Citeseer, 2000.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2009-LaurijssenDutre-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>J.&#x00A0;Laurijssen  and  P.&#x00A0;Dutré.     Adaptive  precomputation  of  glossy
+  interreflections. <span 
+class="cmti-12">CW Reports</span>, 2009.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2012-LehtinenAilaLaineDurand-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>J.&#x00A0;Lehtinen,  T.&#x00A0;Aila,  S.&#x00A0;Laine,  and  F.&#x00A0;Durand.   Reconstructing  the
+  indirect light field for global illumination. <span 
+class="cmti-12">ACM Transactions on Graphics</span>
+  <span 
+class="cmti-12">(TOG)</span>, 31(4):51, 2012.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X1998-OfekRappoport-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>E.&#x00A0;Ofek and A.&#x00A0;Rappoport.  Interactive reflections on curved objects.
+  In <span 
+class="cmti-12">Proceedings of the 25th annual conference on Computer graphics and</span>
+  <span 
+class="cmti-12">interactive techniques</span>, pages 333&#8211;342. ACM, 1998.
+                                                                          
+
+                                                                          
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2009-RitschelEngelhardtGroschSeidelKautzDachsbacher-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>T.&#x00A0;Ritschel,  T.&#x00A0;Engelhardt,  T.&#x00A0;Grosch,  H.P.  Seidel,  J.&#x00A0;Kautz,  and
+  C.&#x00A0;Dachsbacher. Micro-rendering for scalable, parallel final gathering. In
+  <span 
+class="cmti-12">ACM Transactions on Graphics (TOG)</span>, volume&#x00A0;28, page 132. ACM, 2009.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2009-RobisonShirley-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>A.&#x00A0;Robison and P.&#x00A0;Shirley.  Image space gathering.  In <span 
+class="cmti-12">Proceedings of</span>
+  <span 
+class="cmti-12">the Conference on High Performance Graphics 2009</span>, pages 91&#8211;98. ACM,
+  2009.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2008-TevsIhrkeSeidel-a"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>A.&#x00A0;Tevs, I.&#x00A0;Ihrke, and H.P. Seidel. Maximum mipmaps for fast, accurate,
+  and scalable dynamic height field rendering.  In <span 
+class="cmti-12">Proceedings of the 2008</span>
+  <span 
+class="cmti-12">symposium on Interactive 3D graphics and games</span>, pages 183&#8211;190. ACM,
+  2008.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2012-TokuyoshiOgaki-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>Y.&#x00A0;Tokuyoshi and S.&#x00A0;Ogaki.   Real-time bidirectional path tracing via
+  rasterization.   In  <span 
+class="cmti-12">Proceedings of the ACM SIGGRAPH Symposium on</span>
+  <span 
+class="cmti-12">Interactive 3D Graphics and Games</span>, pages 183&#8211;190. ACM, 2012.
+  </p>
+  <p class="bibitem" ><span class="biblabel">
+<a 
+ id="X2008-YuWangYu-"></a><span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span>X.&#x00A0;Yu,  R.&#x00A0;Wang,  and  J.&#x00A0;Yu.     Interactive  glossy  reflections  using
+  gpu-based ray tracing with adaptive lod.  In <span 
+class="cmti-12">Computer Graphics Forum</span>,
+  volume&#x00A0;27, pages 1987&#8211;1996. Wiley Online Library, 2008.
+</p>
+  </div>
+    
+</body></html> 
+
+                                                                          
+
+

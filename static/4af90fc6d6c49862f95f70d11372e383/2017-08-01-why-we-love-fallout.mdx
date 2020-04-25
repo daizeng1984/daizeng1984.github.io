@@ -1,0 +1,38 @@
+---
+category: post
+title:  "Vim Tips"
+date:   "2017-08-01"
+titleImage: ../images/blog/2017/powerarmor-vim.jpg
+size: 4
+visible: 1
+---
+
+[Vim](http://www.vim.org/) is as powerful as your power armor but can be extremely lighter! I believe you click in to learn more about it. But here we don't talk much about [plugins](https://github.com/daizeng1984/dotfiles/blob/master/neovim/nvim/config/plugins.vimrc). Just some tips I found along daily use of vim ...
+
+## Vim Ads
+Sorry before we jump in, here's the ads 😄.
+
+![Vim Today!](../images/blog/2017/vim-ads.jpg)
+
+## Tips
+* Remap Capslock: For a vim user, capslock can be nightmare. In mac you could easily remap it with [Karabiner](https://pqrs.org/osx/karabiner/) to something like <kbd>Esc</kbd>. In my dotfiles configuration, I remapped it to <kbd>F10</kbd> and make it a prefix key for tmux.
+* Selection: <kbd>v</kbd> <kbd>i</kbd> <kbd>t</kbd> means select within tag. You can visual select in `t`ag or `b`lock or `w`ord. Also you should arm with Pope's [surround plugin](https://github.com/tpope/vim-surround) (you need some practices to master power of surround). Similarly working for <kbd>y</kbd> <kbd>d</kbd> etc. as well.
+* Numbers: when you have some text and number editing e.g. adding increasing number for each line. You could do this in command  `:put =range(1,10, 2)`
+* Tabs: `:retab` will just remove every tabs into spaces (nice 😌)
+* Jump between tags: you could visually select around tag <kbd>v</kbd>+<kbd>a</kbd>+<kbd>t</kbd> and use <kbd>o</kbd> to switch.
+* Global variable: sometimes, you'd like to see the tab, and strange non-printable chars in your vim you could do `:set list`; for some files, you'd like to know the file format by `:set ff?` and yes this is actually a command to see and set global variables in vim! `:set varname` or `:set varname?`
+* Macro: <kbd>q</kbd> and then a register name to record it. <kbd>@</kbd> or <kbd>shift</kbd>+<kbd>2</kbd> to apply it. It's simple but extremely useful. There are some complicate macro tricks to do numbers, or incrementally, but since I don't usually use them and they just overflow, out of my memory :laughing:...
+* Bookmark: <kbd>m</kbd> + a char to add and <kbd>'</kbd> + the char to jump there and `:marks` to show all
+* Mysteriuos <kbd>g</kbd>: <kbd>g</kbd><kbd>f</kbd> to open the file under cursor and <kbd>g</kbd><kbd>x</kbd> to open it in xwindow system... <kbd>ctrl</kbd>+<kbd>g</kbd> to show file path information
+* History of command: <kbd>q:</kbd> and for macros we have `:registers`/`:reg` or `:echo @a` for a single register `a`
+* Window zoom fullscreen: <kbd>ctrl</kbd>+<kbd>w</kbd>, <kbd>o</kbd>
+* <kbd>ctrl</kbd>+<kbd>r</kbd> in Insert Mode and then <kbd>=</kbd> allows you do math or something more powerful e.g. `=range(1,10)`!
+* % is currentbuffer in ex command e.g. `:Remove %`.
+* `'<` and `'>` are start and end line of visual block. Therefore, for example, to replace extra spaces in your selection, you can do vim's [Regular Expression](http://vimregex.com/): `'<'>s/\s\s\+/ /g`.
+* reverse all lines `:g/^/m0` which actually takes reg exp matched lines and then move them to line 0.
+* `jumplist`: jump to last edit/change location <kbd>g</kbd>+<kbd>;</kbd> and <kbd>g</kbd>+<kbd>,</kbd>
+* `:vert diffs <tab>` to simply vsplit buffer to diff
+
+## Reference
+I found some really really nice presentation that worth a look: Erik Falor's ["From Vim Muggle to Wizard in 10 Easy Steps"](https://www.youtube.com/watch?v=MquaityA1SM); when you get totally naked in an alien linux server, watch [this](https://www.youtube.com/watch?v=XA2WjJbmmoM&t=907s).
+
