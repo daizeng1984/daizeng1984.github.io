@@ -1,0 +1,79 @@
+---
+category: post
+title:  "Better SSH Copy in Vim"
+date:   "2020-08-20"
+size: 4
+visible: 1
+---
+
+One simple improvement that solves my previous ssh copy pain on remote vim...
+
+# Just Three Functions
+In your Vim config:
+```vim
+function! GetVisualSelection()
+  try
+    let a_save = @a
+    normal! gv"ay
+    return @a
+  finally
+    let @a = a_save
+  endtry
+endfunction
+
+function CopyToNetCat() range
+    let selected_lines = GetVisualSelection()
+    echo system('printf "%s" '.shellescape(selected_lines).' | nc localhost 2000')
+endfunction
+```
+and probably bind it like this:
+```vim
+vnoremap <C-y> :call CopyToNetCat()<CR>
+```
+In your Mac shell script (Linux should replace `pbcopy` with `xclip -sel clip` or `xsel -i -b `):
+```sh
+ssh_copy() {
+    while ! (nc -l 2000 | pbcopy) || true; do ; done &
+    copy_daemon=$!
+    ssh $@ -R 2000:localhost:2000
+    pkill -9 -g $copy_daemon
+}
+```
+
+Now, you login with `ssh_copy user@server` instead of normal `ssh` to remote and have fun there with <kbd>Ctrl</kbd>+<kbd>y</kbd>. Also feel free to change the port number if `2000` is too familar to you. 
+
+# If Multiple SSH Sessions Bother You
+Just forcefully kick out your dups session:
+```sh
+ssh_copy() {
+    echo "Make sure you setup password free by doing: ssh-copy-id id@server"
+    # clean all other ssh session
+    ssh ${1} -t 'ps -aux | grep "[s]sh" | grep pts/ | grep -v $(ps --no-headers -fp $$ | awk "{print \$3}") | awk "{print \$2}" | xargs kill -9'
+    while ! (nc -l 2000 | pbcopy) || true; do ; done &
+    copy_daemon=$!
+    ssh ${1} -R 2000:localhost:2000 -t 'tmux a || $SHELL '
+    pkill -9 -g $copy_daemon
+}
+```
+
+
+# Bonus: No +clipboard or DISPLAY
+**Symptoms**: SSHed in the same remote server, with no `+clipboard` or `$DISPLAY`, thus `unamedplus`, `xsel` or `xclip` would not work in different tmux session etc.
+
+**Treatment**: ancient/traditional copy via tmp files. Map keys to these functions.
+```vim
+function CopyToTmpBuffer() range
+    let selected_lines = GetVisualSelection()
+    echo system('printf "%s" '.shellescape(selected_lines).' > ~/.config/nvim/backup/.vim-buf')
+endfunction
+function PasteFromTmpBuffer()
+    try
+        let a_save = @a
+        let @a = system('cat ~/.config/nvim/backup/.vim-buf')
+        normal! "ap
+    finally
+        let @a = a_save
+    endtry
+endfunction
+```
+

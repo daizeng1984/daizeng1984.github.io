@@ -1,0 +1,63 @@
+---
+category: post
+title:  "Move Recipes to Conda Forge"
+date:   "2020-08-26"
+size: 4
+visible: 1
+---
+
+Track issues...
+
+# Motivation
+Just want to contribute a bit back to community and also I heavily relies on conda on my environment setup. Conda compare brew it has advantage of self contains [cross building environment](./2018-11-18-conda-everything) and more control to versioning.
+
+This post is just my tracking board in case I forgot these PR:
+
+* [neovim](https://github.com/conda-forge/staged-recipes/pull/12493)
+* [fasd](https://github.com/conda-forge/staged-recipes/pull/12584)
+* [zoxide](https://github.com/conda-forge/staged-recipes/pull/13682)
+
+
+# Problems
+## Neovim
+### Libtool Hardcoded Path 🤦
+```
+Conda build env is not reproducible
+```
+When you installed it it just rooted into your OS environment by unpacking all the environment variables into the script. For example:
+```sh
+# Which release of libtool.m4 was used?
+macro_version=2.4.6
+macro_revision=2.4.6
+
+# Assembler program.
+AS="/Users/runner/miniforge3/conda-bld/libtool_1596899629849/_build_env/bin/x86_64-apple-darwin13.4.0-as"
+
+```
+Note Mac's libtool is different from GNU libtool. When you `brew install libtool` you are actually installing glibtool.
+
+Therefore when you build `libtool` with other environment, you get the relocation nightmare. One way to stop is to remove prefix e.g. like [this](https://github.com/conda-forge/libtool-feedstock/pull/22) for all env vars and do some post built dirty removing.
+
+## Neovim Sticked to Lua5.1
+```
+Multiversion & coexists package is hard in many pkg manager including Conda
+```
+Lua5.1 is not back compatible since 5.3. So, things get more and more sticky. I created PR to solve.
+
+🥴I'm now dreaming neovim was [written in Rust](https://github.com/neovim/neovim/issues/8669).
+
+## Fasd
+```
+Command line (bash etc.) script has conflicting requirements
+```
+The ticket is sticked to whether we should include bash in conda while conda is relies on bash. I don't have much time at that time and drop a bit and later fell into new love to zoxide, which is much faster and [Nix](./2020-10-24-nix-power).
+
+## Zoxide
+```
+my z for conda
+```
+Just created the ticket and rust recipes are pretty standard...
+
+
+<!-- xcape -->
+<!-- sdkman -->

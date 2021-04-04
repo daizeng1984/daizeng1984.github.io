@@ -1,0 +1,128 @@
+---
+category: post
+title:  "Castlevania Typing Game Part I"
+date:   "2020-05-18"
+size: 4
+visible: 1
+---
+
+import {SimonSpriteDemo} from '../adhoc/blog/castletypia.js'
+
+If your kid love Castlevania and they are interested in computer [TL;DR](#simon-sprite-demo)...
+
+# Why?
+My kids loves Castlevania when he saw me played in Nintendo virtual console. Graphics/sound effect are simple enough for him to digest.
+
+So why not make a typing game and meanwhile play a bit of PIXI.js (haven't done serious project for a bit while 😜)?
+
+## Ambush! Webpack Complains
+Because gatsby try to render the page and staticize it using server side rendering (please see [here](https://github.com/gatsbyjs/gatsby/issues/13355)). For our app, it's dynamic js so we need to stop it, by wrapping our modules with LazyLoader components as below:
+
+```javascript
+import Loadable from "@loadable/component"
+export const SimonSpriteDemo = Loadable(() => import("./castletypia/simon-sprite-demo.js"))
+```
+
+## WebGL and Legacy
+It turns out My Linux's Firefox doesn't support webgl well... For larger audience with no WebGL but only html5 I turned off it by installing the `legacy PIXI` and import the right pkgs:
+
+```json
+    "pixi.js-legacy": "^5.3.3",
+```
+
+```javascript
+import {
+  ...
+} from '@inlet/react-pixi/legacy';
+
+...
+
+const stageOptions = {
+  forceCanvas: true,
+}
+```
+
+## [React PIXI.js](https://reactpixi.org/)!
+Good someone already have done something for react! But they don't support animation timing (different duration for each frame at this point)?
+
+Let's customize our own component! 
+
+```javascript
+const MyAnimatedSprite = PixiComponent('MyAnimatedSprite', {
+    create: (props)=>{
+        const { frameObjects, images, isPlaying = true, initialFrame } = props
+        const animatedSprite = new PIXI.AnimatedSprite(frameObjects)
+        animatedSprite[isPlaying ? 'gotoAndPlay' : 'gotoAndStop'](initialFrame || 0)
+        return animatedSprite
+    },
+    applyProps:(instance, oldProps, newProps) => {
+        const { frameObjects, isPlaying, initialFrame, ...props } = newProps
+
+        applyDefaultProps(instance, oldProps, props)
+
+        if (frameObjects && oldProps['frameObjects'] !== frameObjects) {
+            instance.textures = (frameObjects)
+            instance.gotoAndPlay(0)
+        }
+
+        if (isPlaying !== oldProps.isPlaying || initialFrame !== oldProps.initialFrame) {
+            const frame = typeof initialFrame === 'number' ? initialFrame : instance.currentFrame || 0
+            instance[isPlaying ? 'gotoAndPlay' : 'gotoAndStop'](frame)
+        }
+        return instance
+    }
+})
+```
+
+This `MyAnimatedSprite` do similar what `AnimatedSprite` does but accept frameObjects as defined here:
+
+```javascript
+export interface FrameObject {
+    texture: Texture;
+    time: number;
+    }
+```
+
+# Sprites!
+2D game is all about sprite. We just need animation texture and its meta file (json). For texture, I found Simon sprite [here](http://supermariobroscrossover.com/media/simon-belmont-castlevania.290/#media) and with some basic painting tool e.g. gimp, I slowly locate their coordinates and sprite size... basically to fill these format:
+
+```json
+    "frames": {
+        "walk0":
+        {
+            "frame": {"x":29,"y":22,"w":16,"h": 32},
+            "rotated": false,
+            "trimmed": true,
+            "spriteSourceSize": {"x":0,"y":0,"w":16,"h":32},
+            "sourceSize": {"w":16,"h":32}
+        },
+        ...
+    }
+```
+
+For the frameObjects, I created my definition of animations that'll be compatible with `AnimatedSprite`:
+
+```json
+{
+    "my_animations": {
+        "walk": [
+        {
+            "texture": "walk0",
+            "time": 200
+        }
+        ...
+    }
+```
+
+Okay, now here it is:
+
+<div id='simon-sprite-demo'/>
+<SimonSpriteDemo/>
+
+
+<!-- https://www.gatsbyjs.org/docs/debugging-html-builds/#how-to-check-if-code-classlanguage-textwindowcode-is-defined -->
+
+<!-- require https://stackoverflow.com/questions/33248012/how-to-use-react-require-syntax -->
+
+<!-- pass render function to children -->
+

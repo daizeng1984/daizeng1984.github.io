@@ -1,0 +1,54 @@
+---
+category: post
+title:  "Language Server Protocol"
+date:   "2018-11-05"
+size: 4
+visible: 1
+---
+
+Setting up various [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment)-like autocompleter in vim is painful until I met [LanguageClient-neovim](https://github.com/autozimu/LanguageClient-neovim).
+
+# First, Disclaimer
+I've been using Shougo's completion plugin ever since neocomplete (during the ancient vim time). Now in neovim, it has its [dark](https://github.com/Shougo/deoplete.nvim) form. If you are using other completion plugins like [ncm2](https://github.com/ncm2/ncm2), this post might not be the case.
+
+# [Language Server Protocol](https://en.wikipedia.org/wiki/Language_Server_Protocol)
+If you ask what changed my impression of Microsoft, I'd answer this Language Server Protocol as one. From the [official page](https://microsoft.github.io/language-server-protocol/implementors/servers/), you could see so far many programming languages and [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) are onboard! Even though [vscode](https://code.visualstudio.com/) still takes first class seat, I'm sure we'll see more powerful standalone servers coming up. Wow, you could even get a server for [GLSL](http://nehe.gamedev.net/article/glsl_an_introduction/25007/). No complaints anymore!
+
+# So Goodbye? [Eclim](http://eclim.org/), [Tern.js](http://ternjs.net/) and ...
+That means whenever I need to work on a new language in vim, I no longer need to search that particular [deoplete](https://github.com/Shougo/deoplete.nvim) plugins and make it work after hours due to dependencies and .vimrc configuration. Installing completion engine dependencies is tedious: I still remember [tern.js](https://github.com/carlitux/deoplete-ternjs) was not friendly and [Eclim](http://eclim.org/vim/code_completion.html) bundled with the huge [Eclipse](https://www.eclipse.org/) GUI family sale is quite tough. They lack of a universal language protocol standard. Even you succeed to make it work, after, you also need to weak key bindings for each of them.
+
+Now with LanguageClient-neovim, I just install the servers (Note: not all of them are out of box but doable and only one time effort) and tell vim where their binaries are. I have freedom to choose any servers I like and freedom to pick up any editors/clients. I've tried out 4 languages so far: Java, Javascript, C++ and Python. They are working amazingly well. Let's see how much work to happiness:
+
+## Java
+From the document, you feel you have to build either [eclipse.jdt](https://github.com/eclipse/eclipse.jdt.ls/) or [javac based ls](https://github.com/georgewfraser/vscode-javac). However, for eclipse.jdt they have prebuilt versions to download [here](http://download.eclipse.org/jdtls/milestones/)! So download and `untar`, and then follow the [script](https://github.com/autozimu/LanguageClient-neovim/wiki/Java#user-content-installation).
+
+## Python
+Simply run 
+
+```sh
+pip install python-language-server
+```
+
+figure out your `pyls` binary path and you are done!
+
+## Javascript
+Same as Python, you just need to 
+
+```sh
+npm install javascript-typescript-langserver
+```
+
+and find the binaries.
+
+## C++
+If you choose clang ([which you probably do]({% post_url 2018-08-11-clang-llvm %})), you just need to install clang with extra tools in box as in this [tutorial](https://github.com/autozimu/LanguageClient-neovim/wiki/Clangd). Although signature has an [issue](https://github.com/autozimu/LanguageClient-neovim/issues/379), but I believe community will solve it soon.
+
+# To Sum Up
+After installing these servers, you just need a few lines in your vim plugins settings like [here](https://github.com/daizeng1984/dotfiles/blob/3b4f4473f17575eae54e554e48ba9ef78ccc1a44/neovim/nvim/config/plugins.vimrc#L257).
+
+Easy piece, right? No?! Okay, if you enjoy a bit more automation, I have a [script](https://github.com/daizeng1984/dotfiles/blob/experimental/misc/installNeovimLanguageServers.sh) to deploy servers in my dotfile environment, you could adapt and make it yours.
+
+# Other Finding
+At this stage, even not fully convinced but I found [coc.nvim](https://github.com/neoclide/coc.nvim) as yet another completion plugin seems to adapt all vscode language-service extensions to vim. If you like more vscode like features and don't have time to install each individual server, you might consider giving it a try. It seems to be still in heavy development. I chose to give it a little bit more time until I get tired of this LanguageClient plugin.
+
+Meanwhile, while we wait, neovim is working on more native lsp support [here](https://github.com/neovim/neovim/pull/6856).

@@ -1,0 +1,117 @@
+---
+category: post
+title:  "Rust Game Development"
+date:   "2020-12-20"
+titleImage: ../images/blog/2020/rust-logo.png
+size: 4
+visible: 1
+---
+
+Taste next gen C lang...
+
+# Bugs
+If you played Cyberpunk 2077 at this time on consoles, you'll hate the bugs like missing texture/geom, crappy physics, weird AI etc. and most of them look very mutithready. Symptom shows this game's threading is messily async under console compiler env and thus not playable. But it's good lesson for developers.
+
+Rust, as a more secure (especially for multithreads) and yet efficient lang, recently catches my eyes and [some people](https://hub.packtpub.com/rust-as-a-game-programming-language-is-it-any-good/) believe it can replace (at least somewhat) the long-live C++ for game dev. Hmmm🤔, interesting... Even though lang is not the one to blame for messy C++ game code, I still wish there'll be a cleaner/stricter language to branch from C++ (instead of merging tons of developer requests) so that developer doesn't need to create wheels, hack dynamic features etc. for application like game. C++ after 2013ish is full of sugars. It becomes more and more syntax-complicate like a new language. Too many burdens. Developers under C++ are not necessarily following strict rules that potentially leading to hard-to-find bugs like uninitialized resources, possibly lock threads etc..
+
+More, Rust claims it uses stricter compiling check to make sure a more reliable run time code, which means like human languages Rust requires you to elaborate your statements to remove many ambiguities. A lot of cli app I used are written by Rust. Besides, with like other mainstream langs, it has friendlier pkg manager than C++.
+
+So maybe Rust can be the one? 
+
+# Rust
+To learn Rust, [here](https://doc.rust-lang.org/book/)'s the official course. To play it, either `Nix` it like introduced in my previous [post](./2020-12-10-nix-power-2) or webly [here](https://play.rust-lang.org/).
+
+❗❗❗Notes for myself that went through [this](https://doc.rust-lang.org/rust-by-example/primitives.html), please ❗❗❗[SKIP](#skip_notes)❗❗❗:
+
+### types
+```rust
+i8, i16, i32, i64, i128, isize
+u8, u16, u32, u64, u128, usize
+f32, f64
+char (unicode 4 bytes)
+bool
+() empty tuple
+struct Tensor(i32, i32) //tuple
+struct Point{
+x: i32, y: i32
+}
+enum PointType {
+    OneDimension, // default 0 but can be =1
+    TwoDimension,
+    ThreeDimension,
+} //enum
+
+[T; length] //array
+const COMPILE_TIME_VALUE : i32 = 10;
+static STATIC_VALUE : &str = 'Unsafe'; // unsafe if you mut it
+let mut mutable = 1; //can change but you can let mutable = mutable; to unmut it 😄
+```
+#### destructure value assignment
+```rust
+let Point{x: point1_x, y: point1_y} = point1;
+```
+#### impl to attach fn
+```rust
+impl Abstract {
+    fn ...
+}
+```
+
+#### type conversion
+Require impl the traits if you convert e.g. &str -> String
+```rust
+impl From<i32> for Number { //TryFrom is the fallible equivalent
+    fn from(s: i32) -> Self {
+        Number { value: s }
+    }
+}
+```
+#### 
+
+<div id="skip_notes"/>
+
+# Engines
+
+## Gate
+2D engine and target webassembly
+
+## Amethyst
+[Amethyst](https://www.amethyst.rs/) seems to be almost ripe and it support [Nix](./2020-10-24-nix-power) so let's try that out. It uses entity components system to model multithread behavior I guess similar to actor framework etc. by Erlang. These model ensured some atomity behavior to avoid dead lock etc.. 
+
+You need to pin down to `1.47.0` according to this [issue](https://github.com/amethyst/amethyst/issues/2524). Of course for 3D graphics, also run with `[nixGL]()` to enable hardware for non nixos env like my centos.
+
+```nix
+let
+  mozilla = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
+  nixpkgs = import <nixpkgs> { overlays = [ mozilla ]; };
+in
+with nixpkgs;
+mkShell {
+  buildInputs = [
+    alsaLib
+    cmake
+    freetype
+    (rustChannelOf { channel = "1.47.0"; }).rust
+    expat
+    openssl
+    pkgconfig
+    python3
+    vulkan-validation-layers
+    xlibs.libX11
+  ];
+
+  APPEND_LIBRARY_PATH = stdenv.lib.makeLibraryPath [
+    vulkan-loader
+    xlibs.libXcursor
+    xlibs.libXi
+    xlibs.libXrandr
+  ];
+
+  shellHook = ''
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$APPEND_LIBRARY_PATH"
+  '';
+}
+```
+
+# Try Out
+Grab a sample code and start to work!

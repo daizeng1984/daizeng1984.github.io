@@ -1,0 +1,75 @@
+---
+category: post
+title:  "📚C++ Refreshing"
+date:   "2021-01-16"
+size: 4
+visible: 1
+---
+
+Refresh my C++ 11 brain and upgrade to 17...
+
+# Why?
+After learning Rust, I feel ready to absorb some good parts of modern C++.
+
+# [Modern Cpp](https://changkun.de/modern-cpp/)(⭐⭐⭐)
+I found the book can be compressed to a few bullet points for myself:
+
+## Cheatsheet
++ use nullptr instead of NULL
++ constexpr for e.g. function fibonacci of compile time; also prefer use constexpr instead of const for compile time constants
++ if/switch ( tmp variable ; ...) allow variables like for loop
++ std::intializer_list<int\> -> { 1, 2, 3} for sizable input
++ tuple and destructor auto [x, y, z] = std::make_tuple<int, double, std::string\>(...); std::get<0\>(tuple) get 0 element
++ get auto type: std::is_same<decltype(x), int>::value
++ if constexpr( compile time if branch) {...
++ use 'using' instead of typedef
++ auto can be return value for template and can be parameters for functionals
++ default template type template<typename T = int, typename U = int \>
++ skipped some parts due to sick of any unreadable meta programming ... unless you want to implement refection
++ use enum class:type instead of enum
++ constructor can call other constructor. Yay!
++ inherit constructor with 'using Base::Base';
++ java flavor override and final: virtual foo() override; or virtual foo() final;
++ explicitly constructors: Magic()= default; Magic(const Magic& )=delete; Magic& operator=(const Magic &)=delete;
++ lambda: [&](args) -> returnee {...} [] can be empty or values that want to capture in function when contructing lambda
++ use std::function<...\> instead of pointer
++ bind function: std::bind(foo, std::placeholders::_1, 1,2) new function takes only one arg
++ T&& extends the life of rvalue and can change it. while T&& itself as ref is lvalue.
++ vec.push_back(std::move(str))
++ std::array > T[] -> std::array.data() to T*
++ std::forward_list
++ std::shared_ptr get() reset() use_count() std::make_shared<T\>(0) to create
++ std::regex_match(std::string, std::regex) 
++ std::thread(lambda, args) and then join()
++ std::future<T\> f = std::async(std::launch::async, []{ return t; }); and f.wait();
++ new lock guard std::unique_ptr > std::lock_guard<std::mutex \> lock(a_mutex);
++ std::atomic<T\> fetch_add() fetch_sub() and is_lock_free to check if support on platform
++ std::this_thread::sleep_for(std::chrono::milliseconds(900));
++ Raw string R"()";
++ alignof and alignas. Wow, my ancient memory of struct alignment.
+
+
+# My Addition
+The book didn't cover enough and filesystem is missing. So here I didn't some adding for complete:
+
++ use std::string_view replacing c style string, and get bonus like start_with(), substr() etc.
++ std::optional<T\> std::nullopt and error handling
++ std::iota(v.begin(), v.end(), start_value) == range_set_container(start_value)
++ std::ref and std::cref return std::reference_wrapper for convenience (e.g. shuffle list using vector referencing to the list element)
++ std::swap and std::iter_swap
++ std::remove_const to remove const and const_cast
++ good stuff in algorithms e.g. copy, shuffle, sort etc.
+
+<!-- for myself, not necessary new features
+
+## Containers
+* construction {1, 2, 3, ...}; or {{1, 2}, ...}; destruction auto [x, y, z] 
+* value_type basically whatever in container<...\>
+* join: either boost::algorithm::join(container, ",") or do it simply like if(!output.empty()) output+=delim;
+
+## String
+* stringstream << ... <<
+* istringstream("...") std::istream_iterator<T\>(istream)
+* ostringstream std::ostream_iterator<T\>(ostream, delim)
+
+--->
