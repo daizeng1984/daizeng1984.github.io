@@ -1,0 +1,26 @@
+---
+layout: home
+title: Home
+order: 1
+threejs: true
+---
+
+import { Container, Col, Row, Card } from 'react-bootstrap';
+import Layout from '../components/layout.js'
+import Image from '../components/image.js'
+
+## Welcome!
+Hello, I'm Zeng Dai. I do web and graphics, by writing code. I picture myself: a problem solver, builder, and truth seeker. I'm also an ex-game developer and an enthusiastic learner of every technology within my radar. Just love the feeling of learning and building cool stuff combo with challenges. 
+
+As you might find out, I have broad interest which spans from time to time: from math/statistics to computer science, from 3D real time rendering to web dev, from big data visualization to deep learning. All these experiences make me a very unique person (knowing both arcane & dark magic😉) to handle a wide range of topics in computer science. In my view, new technologies and buzzwords flies by, yet coding and learning remains unchanged. My recent interest lands in neural network application for our daily life and I believe building its platform for everyone is the next big matter. 
+
+<Image filename="home-bg.png" className="float-right-photo" style={{width: '15rem'}} />
+
+Feel free to explore around my pages where I could log my personal stuff and random rant about code, research, technologies, and life.
+
+
+
+export default (props) => {
+return (<Layout {...props} icon="home"/>)
+}
+
