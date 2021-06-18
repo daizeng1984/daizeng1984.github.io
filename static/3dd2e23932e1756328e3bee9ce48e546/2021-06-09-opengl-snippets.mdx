@@ -1,0 +1,49 @@
+---
+category: post
+title:  "OpenGL Snippets"
+date:   "2021-06-10"
+size: 4
+visible: 1
+---
+
+Starting to refresh my OpenGL brain and figure a good chance to make tool sharp to survive in wild OpenGL Programming...
+
+# Prerequisites
+Install your favorite snippets engine e.g. coc-snippets and point it to your customized snippets like I did [here](?). Setting up a working environment can be frustrating. If you work in \*nix, I got your back. Just install [Nix]() and [direnv](). Works best for Linux machine though. For more details, see my previous [post](./2020-12-10-nix-power-2).
+
+# GL Snippets
+## Header
+I meant survive in wild but not naked. You need these almost must-have headers. With GLFW, you don't need to worry about GL context binding to native window. With GLAD you care less about OGL entry point. GLM saves you some scratch work to implement e.g. vec2.
+
+```cpp
+// Generate your own header https://github.com/Dav1dde/glad/tree/glad2
+#include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+```
+
+## Basic Geometry
+Something worth a try...
+```cpp
+```
+
+
+## Push/Pop States
+API leaves for you, my dear. Let's finish it with one blow. Cause you never know which state is giving you black screen 🤦.
+
+
+## \*\*O
+VBO, VAO, EBO, FBO how can you confuse us like that 😂? The reason is probably left for driver programmer to explain. But here a simple explanation: VBO is just buffer to store vertex, FBO is buffer to store pixels, while VAO is wrapper to manage VBO.
+
+
+## Elements
+Index Buffer idea:
+
+
+# Vulkan Snippets
+Ok, OpenGL is not that bad. Let's crack Vulkan.
+
+
