@@ -1,0 +1,98 @@
+---
+category: post
+title:  "📚Research of Material (Chinese)"
+date:   "2010-03-06"
+size: 4
+visible: 1
+---
+
+How to make it realistic? ...
+
+# Preword
+
+Why some 90's 3D game and CG movie looks dull and very fake? I'm trying to find answer from these papers.
+
+# Rearch Notes
+
+关于材质方面的渲染，首先需要反应的是材质和光线的作用，通常，就反射来说比较简单的模型是BRDF，光线就有简单的点光源到环境光，环境光远比点光源复杂，为此在闲暇之余阅读了数篇文章，寻找解决方案。下面的描述不会加以区分那个scale下的BRDF：
+
+如何更“准确”的建模材质，无论从物理还是经验数据，都是挑战。
+
+主要来说分2种，物理理论，经验数据型。物理研究的是基于物理理论推导了，经验是根据已知经验做一个假设的模型，是根据想象力和创造力了，数据根据前面的模型研究如何压缩高效的复合实际数据。其实分类并不重要，这些人的思路才是创造的源泉。
+
+Blinn-Phong无额外参数可控，仅限塑料，缺乏补偿Lewis，他提出经验的模型需要physical plausible，并验证了几个熟知的模型。简单而受人爱戴。
+
+Sillion提出由spherical harmonics来近似anisotropic BRDF，待读。
+
+Poulin提出了表面anisotropic看作圆柱形成（介于displacement与torrance类模型之间的微观表面），分析后用Chebyshev来帮助积分，目前不适合实时。
+
+Bank给出了一些基于几何的简单模型，包括了anisotropic，甚至皮毛，该论文语言晦涩：(，不能调整参数改变，但非常适合实时应用，待读。
+
+Ward结合经验和物理的方法，给出了一个anisotropic的模型，扩展Cook的Gaussian表面分布为2维，参数可以很好的度量，有2个参数。
+
+Schlick总结之前的几种模型，得出一个更general的经验模型，而且physical plausible，，涵盖之前模型，还能包括SS，heterogeneous的材质，且参数很人性化。此外他还在另一篇文章中总结了2大BRDF：经验型和物理型，值得一看。
+
+Lafortune基于cosine lobe为BRDF给出了一个广泛的矩阵表达式，根据数据量体裁衣，以矩阵作为吸引元素。介绍了很多前人采用的基函数方法Sphere wavelet，Zernike Polynomial等。
+
+Ashikhmin在实时渲染提出了很多anisotropic，待看！
+
+Ashikhmin微表面模型在表现scattering为主奏效
+
+Torrance的文章假设表面由很多随机的微小的镜面所组成。非常严格的理论推导，加上实际数据的验证，文章证明了这个模型对粗糙带微小随机镜面的表面有效。涵盖一些基本的金属和非金属材质，很好的解释了off specular峰值的数据。简化了subsurface scattering等非镜面的反射。应该说对一般的isotropic的金属和少数非金属，这个模型还是不错的。
+
+Cook继Blinn之后，把这个物理模型引入到了图形学中，并加以简化。考虑了反射模型对光谱的依赖性，并做了很多简化近似。
+
+He等给出一些利用电磁理论推导的模型，属于Cook的强化版吧，更注重Optic wave effect。不过这些更“精确”的模型所需物理量很难测得，所以不一定很实用，需要简化，待读。
+
+除了关注微小的镜面，Oren强调更加准确的视觉依赖的Lambertian微表面建模。
+
+Koenderink提出Vgroove的几何错误性，基于Oren得到了100%球形pitted表面的模型。由于Dg4是lambert，采用一般的辐射度方法可解，最终积分起来得到最终结果，很好的符合一些塑料模型等。另外一篇文章提到了使用zernike多项式逼近BRDF的方法。
+
+Kajiya引入前人的一个基于物理的anisotropic的模型，分组预计算离散化然后插值，实时难。
+
+Stam扩展&rederive He的模型，主要处理衍射，待读。
+
+点光源可以很容易的用BRDF在GPU实现，但是对于Glossy，需要考虑整个环境的作用。介于完美散射和完美高光之间Bastos。
+
+有人Miller，Gortler提出基于image的绘制，有light field方法。预先使用offline甚至直接物理采集的方法，计算好light field，然后直接应用到物体上面。主要缺点是视角的移动，其实还是采样的问题，待读。我的初浅理解是，就像以前出现的多角度摄影，然后后期处理成3D视频，以后会有用吗？我不知道。
+
+Walter提出了用普通的点，直光（virtual light）的线性组合来模拟plenoptic function。难以想象光源数量，不过是种思路。
+
+对于glossy，有人Stirzlinger等提出了Photon map为基础的预处理与交互的渲染。Photon map的全局光照使用了密度估计理论。但是我对photon map还不了解，对此文没有深入。
+
+也有人出了根据材质对反射的环境贴图滤波Bastos或者是直接根据BRDF积分Cabral，前者最后用Fresenel反射项加以控制。从而达到glossy的效果，应该说覆盖了一部分材质。应用贴图来计算材质越来越普遍。
+
+Schroder，Christensen等提到用小波改进辐射度来模拟glossy的效果，需要辐射度相关知识，待读。依靠辐射度的glossy方法在Arvo的论文中有所介绍，而他也基于辐射度利用角动量的知识做了glossy相关的工作，待读。
+
+Heidrich基于固定管线有限的能力，实现了Anisotropic，Prefiltered EM等理论的固定管线的渲染，重要的思想是预计算纹理查找来实现BRDF，顺带提出了Parabolic map。Cabral独立得做了同样的工作。
+
+Cabral提出了使用提出用Dg3的bump map，horizon map来实现anisotropic，Dg4都是简单古老的模型，处理好后在渲染时却采用sphere harmonic来表示计算好的相关项和环境映射项，待读。
+
+Westin基于Cabral提出更有效的BRDF的基矩阵（Y*MY）表示，且满足reciprocal，montecarlo积分计算系数。Dg3采用Cabral类似的方法，Dg4直接采用熟知的BRDF。理论上我觉得这个模型基本上解决了大部分微观材质的BRDF问题（no optic wave effect，no subsurface scattering），唯一的问题是计算量。
+
+Lafortune提到更多有关各种函数逼近的内容。
+
+Gondek提出了用自适应分割的办法来有效的表示光谱依赖的BRDF模型，包括了散射，目前缺乏光学基础知识，待读。
+
+Fournier提出了用可分的函数积之和来表示BRDF，用于实现辐射度的高光效果，思路好。
+
+Schroder简介了小波在图形学中的要地位和应用，由于缺乏小波背景，待读。
+
+Rusinkiewicz提出了利用变换使得BRDF可分的做法，原理是大多数BRDF实际上是主要随着halfvector等变化。
+
+Kautz把可分函数的近似BRDF的思想用于固定管线，并给予很多实现方面的提示和改进，除了利用SVD还有所谓的简单的ND来加速运算。Kautz的预滤波方法实现glossy，用普通的对称lobe来拟合BRDF，对环境图进行滤波后渲染出，对每个elevation角度都做了一个环境贴图，效果提升跟预滤波的简单方法（Heidrich）不大。
+
+Kautz总结了glossy的几种计算方法，提到很多在实现上的细节，并提到利用Bank模型的anisotropic的glossy。
+
+Ashikhmin仍然利用的是可分的思想，假设p(h)分布起主要作用，用了“严格”的推导（阴影项可分）得到了一个比较广泛的模型，满足几个物理plausible的性质，涵盖一定的模型数量。
+
+McCool把基于可分函数的思想，提出log可分的BRDF近似，有正，参数化简单等优点。近似的计算采用解方程组的方法计算2个纹理。
+
+Heidrich给出一种利用表面高度场（类似Max）考虑indirect illumination的光照技术，用于硬件实现。不仅在Dg3有意义，Dg2也有意义。
+
+Kautz利用PRT实现glossy，理论上低频的模型完全可以适用。
+
+Hanrahan做的subsurface scattering，提到体积渲染的transport theory
+
+Kautz提到无偏采样技术KIRK, D., AND ARVO, J. Unbiased Sampling Techniques for Image Synthesis. In Proceedings SIGGRAPH (July 1991), pp. 153–156.
+
