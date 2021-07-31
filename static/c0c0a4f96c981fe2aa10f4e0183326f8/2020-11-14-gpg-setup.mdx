@@ -1,0 +1,58 @@
+---
+category: post
+title:  "Gnupg Nix Setup"
+date:   "2020-11-14"
+size: 4
+visible: 1
+---
+
+Just to help explain a bit...
+
+# Nix & Home Manager
+
+Why Nix? please visit my [previous post](../2020-10-24-nix-power). 
+
+Home manager's default programs for darwin is limited and nix-darwin is intrusive for me. However, gpg's setup is not really hard nowaday (no more backend/daemon managing stuff). It's all about setting up `gpg*.conf` files in `.gnupg` once you have `gnupg` and `pinentry` from nixpkgs.
+
+In home-manager, if you do:
+
+```nix
+programs.gpg = {
+    enable = true;
+}
+```
+
+this will generate `gpg.conf` file, while you do:
+
+```nix
+services.gpg-agent {
+    enable = true;
+}
+```
+
+It generates the `gpg-agent.conf`. But this services bundles with `systemd` for Linux and it fails on Mac (on Mac `launchd` should be used). `gpg-agent` will be started automatically when you make gpg calls so no need to manage it as service. Therefore, one workaround, which I'm showing now, is to directly grab the part we need in this [service nix file](https://github.com/nix-community/home-manager/blob/master/modules/services/gpg-agent.nix). 
+
+So setup for `curses` ends up like this:
+
+```nix
+let
+  pinentryFlavor = "curses";
+...
+in
+...
+  home.file.".gnupg/gpg-agent.conf".text = lib.concatStringsSep "\n" (
+    ["no-grab"]
+    ++
+    [...] # more options
+    ++
+    ["pinentry-program ${pkgs.pinentry.${pinentryFlavor}}/bin/pinentry"]
+  );
+```
+
+
+# Troubleshooting Guide
+
+* You might want to trash/rename `.gnupg` folder for a fresh start.
+* You might want to check if process `gpg-agent` is running.
+* You might want to check keys with `gpg --list-secret-keys`.
+* For neovim, `curses` would not work. You might want to use `pkgs.pinentry-mac` as pinentry or other alternatives such as gtk/qt for linux.
