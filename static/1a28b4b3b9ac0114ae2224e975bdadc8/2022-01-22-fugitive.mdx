@@ -1,0 +1,59 @@
+---
+category: post
+title:  "Fugitive"
+date:  "2022-01-21"
+size: 4
+visible: 1
+---
+
+Most powerful git tool human ever created...
+
+# Why
+
+This is just a simple tutorial to features I found useful in [Fugitive.vim](https://github.com/tpope/vim-fugitive).
+
+In my experience, Fugitive is like a surgery tool directly operating on these SHA objects in `.git`. There's basically nothing it cannot do and it sounds so illegal. However, it's not foolproof type of product, instead, you need to dive deeper into its documents and tutorial to find your way. So this blog is just to summarize my way. But I hope it's also useful for you.
+
+# Basic Concept
+First, you need to understand what's `fugitive object` in their tutorial. We have 3 types of object: `tree`, `blob` and `commit`. `tree` is folder structure; `blob` is file; and `commit` is the commit. All of them are coded in SHA to refer to. 
+
+[Here](https://github.com/tpope/vim-fugitive/blob/master/doc/fugitive.txt#L593-L615)'s the example for how Fugitive refers to these objects. But it's much more than you could use in daily life though! What I found useful are:
+
+```
+**HEAD~2** HEAD's previous 2 commit object and @ equals HEAD if you like to type short
+**master~2** master current commit's previous 2 commit object
+**branch:filename** e.g. master:% current file blob, or just give branch name master for current file
+**branch:** branch tree object
+**@~2:filename** HEAD's grandparent's file blob
+```
+
+So I'll call them just object with this context. Plus normal git syntax, it's easy enough to identify files of different branch and commits. Let's see how powerful it is.
+
+# Fugitive Swiss Knife
+## Git
+Type `:G` and you get interactive `git status`, where you could staged/unstaged (-), revert (X), and check diff (dv). Do you still remember the painful `git add -p` command? When you diff you can directly edit the staged version to partially stage your changes!
+
+This interface alone is very satisfying already and probably cover 60% of your git usage.
+
+## Git diff(tool)
+You can directly diff two version e.g. `G d object1` object2` (diff object now has issue). It returns you the list of diff files. Use `[q` and `]q` to move between hotspot and see the diff with this [temporary fix](https://github.com/tpope/vim-fugitive/issues/132#issuecomment-570844756). I personally bind it to a [key]() so that we could diff anytime for it.
+
+## Git log (Following Files)
+You can trace historical changes through `:0Gclog -- %` to get all commits containing current file. Of course `%` is just vim's sugar for current file. You can put any file after the `--`. To diff the quickfix window, I bind another [key]() to diff with current working copy.
+
+## Git mergetool
+You can directly merge with `Gvdiffsplit` the file with git merge tag. It'll open as three way merge style. From left to right is: `Merge Target` or `Ours` ➡ `Working Copy` ➡ `Feature Branch` or `Theirs`.
+
+`:diffget` like our normal vimdiff mode. However, you need to give buffer name. For example, for buffers like:
+```
+Ours: ......//2/demo.js
+Working: ....../demo.js
+Theirs: ......//3/demo.js
+```
+Then you 3-way merge will refer to these buffer with the name `2`, `demo` and `3`.
+
+## Gedit
+You can get any version in git like God using `:Gedit object`. For example, if I want to see the file in a feature branch, I just do `:Gedit branchname:/path/to/file`. Or if not sure about the filename, I'll just `:Gedit branchname:` to open tree object or folder.
+
+## Gwrite
+Write/save your working one and also update to staged. It's somewhat useful when you do merging and want to use purely from `Ours` or `Theirs`.
