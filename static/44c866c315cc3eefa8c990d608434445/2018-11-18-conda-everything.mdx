@@ -1,0 +1,60 @@
+---
+category: post
+title:  "Revisit Conda"
+date:   "2018-11-18"
+titleImage: ../images/blog/2018/conda.png
+size: 4
+visible: 1
+---
+Conda is not just for Python.
+
+# Conda
+Conda is a cross-platform, language-agnostic binary package manager. Shame for me 😟, it's there for years, but only recently I've realized how awesome it is! Maybe Anaconda's daunting fat distribution scares away people like me. Anyhow, with [MiniConda](https://conda.io/miniconda.html) you can manage virtual environment of your \*nix packages. If you works on app level development (not OS related), you can easily make almost every standard linux dev package `virtual`. This is super useful if you're not sudoer or in big tech giants (which usually has their own package mangers) but want to do something big or you don't like heavy rocket-launcher solutions ([Docker](https://www.docker.com/)/[VirtualMachine](https://en.wikipedia.org/wiki/Virtual_machine)). Actually, inside conda's `x86_64-conda_*-linux-gnu/sysroot`, you can build your own \*nix kingdom or miniverse.
+
+![A miniverse, from Rick and Morty](../images/blog/2018/miniverse.png)
+
+# Use Conda for Everything
+I've found a lot packages in anaconda shopping mall: **zsh, clang, cmake, libtool, autoconfig, nodejs, ruby, openjdk**... all linux toolchains and packages you could image. Vendor like `conda-forge` makes a lot of recipes, got to check it out. Next time when you want to *brew/apt/yum install*, you should first check if you can do it in conda elegantly. The good things is that you don't need to messing around with folders like `/usr/bin` etc. and you can easily revert to your previous install revisions. Excited by this finding, I've migrated all my old install [scripts](https://github.com/daizeng1984/dotfiles/blob/experimental/installConda.sh) just to use conda so that my environment is more independent.
+
+# What? no recent neovim?
+In anaconda, I can only find python package instead of native neovim app I need. There are some native neovim build but mostly outdated. One of the greatest things about conda ecosystem is: if some package's missing, you can build it from source and then share it on Anaconda store. Everyone else benefits by saving a lot of build/release time. 
+Build conda packages is so [easy](http://mlg.eng.cam.ac.uk/hoffmanm/blog/2016-02-25-conda-build/). Always remember `conda-forge` is one of the most resourceful channels. After some searching, you could write your first build [script](script) for neovim quickly. Then you just do:
+
+```sh
+conda build nvim -c conda-forge
+```
+
+Later install this package locally. In my case, `--use-local` doesn't work, so I used this one.
+```
+conda install -c file://${CONDA_PREFIX}/conda-bld/<PACKAGENAME>
+```
+When build is working, you could upload it for example:
+
+```sh
+anaconda login # you need: conda install anaconda-client
+anaconda upload ${CONDA_PREFIX}/conda-bld/linux-64/nvim-0.3.1-0.tar.bz2 
+```
+
+Of course, you can do better using [CI](https://en.wikipedia.org/wiki/Continuous_integration) like [Travis](https://travis-ci.org/) to automate releasing of all platforms. You can also push your recipe to `conda-forge` for publish like [here](https://gist.github.com/zshaheen/fe76d1507839ed6fbfbccef6b9c13ed9) or [here](https://gist.github.com/yoavram/05a3c04ddcf317a517d5)
+
+So now everyone who wants neovim in conda could do this in Linux/OSX, 🙌: 
+```sh
+conda install -y -c daizeng1984 nvim
+```
+
+# Revisit My Previous Projects
+If you worked with Python before, you must remember the nightmare with Python's native dependencies e.g. **BLAS, OpenLdap, Cyrus-Sasl** etc.. One of my python neovim plugin also has hard-to-get dependency. This sucks and frustrates a lot since we are advertised Python is very cross-platformy. Now with conda, you have more confidence to install all dependencies using merely `conda install`. There are still some Python packages (pip) or outlaws that don't respect conda, and blindly complains about e.g. missing lib's headers. In this case, we need keep the build folder (--no-clean), add lib and include locations in `setup.cfg` and reinstall. 
+
+For example, my neovim plugin [Snip-n-Paste](https://github.com/daizeng1984/vim-snip-and-paste), requires [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) which usually took quite some time to get it right, but now it's simply: 
+
+```conda install -c pkgw-forge -c conda-forge gtk3 pygobject
+```
+
+Another example is installing the servers for LanguageClient e.g. cquery.
+
+# Cons?
+You got me, not perfect at everything, just for open *nix packages. You cannot install OS dependent app e.g. mac store app etc.. There are also some boundaries if you have some outlaw (mostly native code related) apps, e.g. [maplot](https://matplotlib.org/faq/osx_framework.html). In these case, you're still limited to `brew install`, but maybe think about: do you really need these not very portable `bad guys`?
+
+conda might as well have issues with versions consistency. You need to choose the reliable channel. But again, when messed up, you can always revert back. To minimize these issues, I'd stick to `conda-forge` channel for all dependencies and when necessary, build my own. Therefore, for my conda experience so far, so good.
+
+Of course, conda is not alone. For *nix environment, [Nix](https://nixos.org/nix/) as another package manager claims to be as cool as it and it seems to gain a lot of attention recently. However, no matter your choice, it's good to make your development environment as independent as possible.
