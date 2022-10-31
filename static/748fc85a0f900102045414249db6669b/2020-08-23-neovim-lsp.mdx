@@ -1,0 +1,54 @@
+---
+category: post
+title:  "Neovim ❤ LSP"
+date:   "2020-08-23"
+size: 4
+visible: 1
+---
+
+Coming late, but it is worth the wait...
+
+# What's LSP
+Please see my old [post](./2018-11-05-language-server-protocol). Now LSP client is integrated in neovim to bring fast/smooth user experience!
+
+# What About LanguageClient-Neovim in That Post?
+It's way hard to config and this one is no better than [CoC](https://github.com/neoclide/coc.nvim).
+
+
+# What About CoC?
+Wow, this one changes a lot since my [last check](./2018-11-05-language-server-protocol). Now it's very easy to use and a lot mature. Strongly recommend to people just from Visual Studio. It's a lot heavy as it looks like. It's an ambitious migration of VS extensions plus many powerful features. Major language as JS is a plus. If nvim-lsp fails me, I'll convert to CoC for sure.
+
+The reason to prefer nvim-lsp a bit is native support and performance, though right now, I have no evidence to show that. Another execuse is deoplete plugin doesn't work nicely with CoC and some of my plugins are with deoplete 😢.
+
+Anyway, now I could evaluate both of them in different projects in work and probably update later.
+
+# Nvim-LSP Setup in 3 Min
+If setting up CoC is in 1 min, then lsp takes just a bit longer. To preview nvim's native lsp with me:
+
+1. Be sure to have `conda` at hand (you should!). If not please follow [this](https://github.com/daizeng1984/dotfiles/blob/master/installConda.sh#L16-L17). Just install nvim nightly build:
+```
+conda install -c daizeng1984/label/nightly nvim
+```
+
+
+2. Comment out your old complete plugins like CoC, LanguageClient-neovim etc.
+
+3. Install plugin [nvim-lsp](https://github.com/neovim/nvim-lsp)
+
+4. Add these lines to your config.vimrc:
+
+```
+lua <<EOF
+require'nvim_lsp'.pyls.setup{}
+require'nvim_lsp'.tsserver.setup{}
+EOF
+```
+
+5. Then install language servers you need, for example `pyls` you can do: `conda install -y -c conda-forge python-language-server` and for `tsserver` you can do in nvim directly `:LspInstall tsserver`. For more language support, look at [here](https://github.com/neovim/nvim-lsp#user-content-configurations). Ideally, all these plugins should be installed with `:LspInstall` seamlessly in nvim in the future just like CoC.
+
+# Java
+Java is missing here. But again, just a [matter of time](https://github.com/neovim/nvim-lsp/pull/245).
+
+# Autocomplete
+If you need autocomplete, add autocomplete plugin e.g. [deoplete-lsp](https://github.com/Shougo/deoplete-lsp).
+

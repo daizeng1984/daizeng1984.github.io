@@ -1,0 +1,38 @@
+---
+category: post
+title:  "Ffmpeg Snippet"
+date:  "2022-02-18"
+size: 4
+visible: 1
+---
+
+Why would ppl design API like this?
+
+# Motivation
+Like opengl, these low level api is very tedious and old. I'm surprised that we don't even have a header only wrapper for ffmpeg? This time let's first use boilerplate snippet to fix.
+
+This is for whoever "Just Want to Load Video and Get the RGBA!".
+
+# FFMPEG 101
+Each video file or `*.mp4` is composed of video stream, audio stream. For each stream, they are stored as `packet` by `packet` or `blob` by `blog`. However, these `packet` are not straightforward to view as a frame of picture. You need to decode it to see the real RGBA images which is called `frame`. `frame` has different format other than RGBA. Most of cases, you need to convert them, e.g. from YUV (which stores like YYYYYYY....UUUUU.....VVVVVVV....) to RGBA (RGBARGBARGBA...).
+
+# Snippets
+Like opengl's hello world, ffmpeg's hello world is neither mercy for beginner 😁. 
+
+The process is:
+1. load file (with meta information)
+2. find decoder
+3. find streams
+4. decode streams
+5. convert frame
+6. done
+
+
+# Try It Out!
+
+
+# Header Only Wrapper?
+TODO:
+
+# Bonus
+What if performance is not my concern? and I just want to hack something...

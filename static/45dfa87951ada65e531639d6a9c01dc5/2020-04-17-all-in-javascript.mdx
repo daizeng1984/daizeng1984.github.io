@@ -1,0 +1,80 @@
+---
+category: post
+title:  "Migrate to Gatsby and MDX"
+date:   "2020-04-17"
+size: 4
+visible: 1
+---
+
+Markdown + ReactJS = MDX.
+
+
+# RIP Jekyll
+
+It's been an idea for a while since the [posts](/2019-05-12-reactjs-webpack-jekyll) last year. After I upgraded my mac, Jeykyll is broken in my new setup. Installing ruby's native package is nightmare, and I cannot bear the tedious rb-package, e.g. [rb-eventmachine](https://anaconda.org/conda-forge/rb-eventmachine). So why not try out the javascript based blog framework?
+
+There are quite a few framework based on Javascript, like Hexo, etc. But if you love ReactJS and Markdown, [React Static](https://github.com/react-static/react-static/tree/master/) and [Gatsby](https://www.gatsbyjs.org/) might catch your eyes. In my first trials, I dumped React Static because of too much scratch work need to be done for MDX mixed with frontmatters.
+
+
+# So Gatsby?
+## Pros
+* All in JS
+* A lot of good plugins
+* A lot of optimization for static generation like images
+* Support MDX with Frontmatters
+
+## Cons
+* ReactJS is required
+* GraphQL is required
+
+# How to Migrate
+## UI
+Basically ReactJS doesn't like the dangerously old html template in Jekyll. Redesign from scratch is necessary. I redesign all the modules and try to keep my favorite elements as possible. For [Three.js](https://threejs.org/) ocean wave and some tiny scripts, still work in progress. But overall, the current UI looks nice and clean. I'll add more dynamic items later.
+
+I also replaced the old background gradient color images with css gradient animation for better performance.
+
+Meanwhile, of course responsive and mobile friendly page is always my goal.
+
+## Posts
+I need to support my old frontmatters as much as possible, and the old markdown posts can be directly used in MDX. Resources like images and links need to change a bit in these posts. To get images, GraphQL is used. It looks tedius and confusing at first, but later when you modularize them, it works better with benefits of image loading optimization.
+```js
+const Image = props => (
+  <StaticQuery
+    query={graphql`
+      query {
+        images: allFile {
+          edges {
+            node {
+              relativePath
+              name
+              childImageSharp {
+                fluid(maxWidth: 600) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
+          }
+        }
+      }
+    `}
+    render={data => {
+      const image = data.images.edges.find(n => {
+        return n.node.relativePath.includes(props.filename);
+      });
+      // do something for your image
+    }}
+  />
+);
+
+export default Image
+```
+Tweak these query with [http://localhost:8000/___graphql](http://localhost:8000/___graphql)
+## Images
+The powerful Gatsby plugin preprocess static images and optimize them when loading out of box. For other format like gif and svg, we have to keep the original. Static webpage in Gatsby allow you to spend very little effort to achieve something very close to professional. As below, when website initially load Grey SVG image, it is blazing fast! Then lazily, higher res png image will be loaded. Making sure you won't wait for assets loading.
+
+![Ninja Gaiden Image Preprocess into Gray B&W SVG](../images/blog/2020/ninja-fluid-svg.png)
+
+
+# Future Work
+Continue to finish the Three.js work and tiny scripts.
+

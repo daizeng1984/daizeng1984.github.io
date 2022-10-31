@@ -1,0 +1,20 @@
+---
+category: post
+title:  "Efficiency Tools in May"
+date:  "2022-05-19"
+size: 4
+visible: 1
+---
+
+Who doesn't love faster tool?
+
+# TL;DR
+```.sh
+conda install -y -n base -c conda-forge conda-libmamba-solver
+```
+
+# Introduction
+Basically a rewrite of conda in C++. It's also multithreaded. However, you have to remember this new name `mamba`. You can also use pure C++ micromamba to do bootstrap which is a pure package manager that have no python or anything.
+
+However, you don't need to install and change your muscle memory to `mamba` mode. You can directly install mamba dep solver to use conda as you used to and get faster code.
+

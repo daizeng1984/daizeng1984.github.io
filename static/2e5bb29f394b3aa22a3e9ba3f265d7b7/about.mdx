@@ -1,0 +1,49 @@
+---
+layout: about
+title: About
+permalink: /about/
+---
+
+import Layout from '../components/layout.js'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLaptop, faUserEdit, faGamepad, faTree } from '@fortawesome/free-solid-svg-icons'
+import Image from '../components/image.js'
+import WilliamAge from '../adhoc/william-age.js'
+import AlexAge from '../adhoc/alex-age.js'
+
+
+### About Work
+I'm currently a SW engineer @ [Meta](https://meta.com) buiding Metaverse. Before this role, I did graphisc engineering @ [Tiktok](https://tiktok.com), and worked for ~5 years @ [Bosch Research](http://www.bosch.us/content/language1/html/rtc.htm) productizing I4.0 & eXplainable AI [web app](https://www.bosch.us/media/our_company/innovation/visual-analytics-industry-4_res_1280x720.png), [3D map](https://www.bosch.us/media/our_company/innovation/3d-map-navigation_res_1280x720.jpg), & hand/[glove](https://www.bosch.us/media/our_company/innovation/bosch-intelligent-glove_res_1984x1116.jpg) capturing etc., where I learnt a lot about industrial research lab. Before in 2014, I joined [Amazon](https://www.amazon.com/) Retail (hardline) as SDE where I unlocked my web dev skill and have a great time with enthusiastic colleagues.
+
+My earlier industrial experience started at [Ubisoft](https://www.ubisoft.com/en-GB/) in 2008 as a software developer for [Rayman](https://en.wikipedia.org/wiki/Rayman) HD.
+I have computer science, statistics and mathematics background and thus a "mixture" of [geeky/nerdy](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/) things. 
+
+<Image filename="coding.png" className="float-right-photo" style={{width: '10rem'}} />
+
+I hand on lots of tech but never overfit my tech brain and here's the keywords I try to define my tech league: real-time, full-stack, GPU, web, AI, scale, productization, engineering focus.
+
+I love graphics, however, I'm a TUI guy when coming to coding, or more precisely a Vim+Tmux guy always carrying his [backpack](https://github.com/daizeng1984/dotfiles).
+
+<!---
+I've recently been quite interested in deep learning, if you get any ideas or opportunities, please contact [me](/assets/cv/zeng-resume.html).
+### About Me
+-->
+### About Academy
+In 2014, I graduated from [University of Iowa](http://www.uiowa.edu/) where I spent wonderful years studying 3D real time rendering with my advisor [Chris Wyman](http://cwyman.org/). I also have M.S. degree in Probability and Mathematics Statistics and B.S. degree in Applied Mathematics from [Sichuan University](http://www.scu.edu.cn/en/), where I worked on theoretical research (statistics) of multi-sensor fusion with Prof. [Yunmin Zhu](https://scholar.google.com/citations?user=cN4yYyoAAAAJ&hl=en).
+
+
+### About Life
+
+<Image filename="william-code-abc.png" className="float-right-photo" style={{width: '10rem'}} />
+
+
+I have two "lovely" kids with my wife living in bay area. As expected, <WilliamAge/> while <AlexAge/>.
+
+<!-- (Wait, for quantum physics, I have my own interpretation regarding [this](https://www.youtube.com/watch?v=WIyTZDHuarQ) one).  -->
+
+During weekends, I enjoy playing <FontAwesomeIcon icon={faLaptop}/>, <FontAwesomeIcon icon={faGamepad}/>, <FontAwesomeIcon icon={faUserEdit}/> and sometimes go out to nature <FontAwesomeIcon style={{color:"green"}} icon={faTree}/> for fresh air.
+
+
+export default (props) => {
+return (<Layout {...props} icon="info"/>)
+}
