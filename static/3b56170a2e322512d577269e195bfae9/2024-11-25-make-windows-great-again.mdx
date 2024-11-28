@@ -1,0 +1,44 @@
+---
+category: post
+title:  "Unlock Real Windows"
+date:  "2024-11-25"
+size: 4
+visible: 1
+---
+
+Windows is (slow, power hog, rebooting, ) except gaming. Now let's fix it.
+
+# Why
+
+Windows is almost only for gaming. At least last time when I quit M$, I have a solid impression that it's just for games. Windows laptop is tr. I left windows for linux but struggle to find a good linux laptop back then. Later, found mac is the better alternative. But now with WSL on, I feel windows probably is the better alternative now.
+
+# Rebooting
+This is the most infamous one. When you are doing presentation or have a great work unsaved, windows will do its best to quit your work and ... Now we have a solution that you can take control. Grab your cmd with admin right and paste:
+
+```sh
+FOR %F IN ("%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~*.mum") DO (DISM /Online /NoRestart /Add-Package:"%F") 
+FOR %F IN ("%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~*.mum") DO (DISM /Online /NoRestart /Add-Package:"%F")
+```
+then go to Start Menu to run: gpedit.msc or cmd
+
+Go to Computer Configuration > Administrative Templates > Windows Components > Windows Update > Configure Automatic Updates > Legacy Policies and find option "No autore-start with logged on users for scheduled automatic updates installations"
+
+Note: This policy applies only when Automatic Updates is configured to perform scheduled installations of updates. If the "Configure Automatic Updates" policy is disabled, this policy has no effect.
+
+So go to Administrative Templates > Windows Components > Windows Update > Manage end user experience > Configure Automatic Updates make sure this option is either not configured or **NOT** Disabled
+
+# Hardware
+Apple is way better cooler since M series came out. But luckily this year, things are going to change. With snapdragon x ... we now can have better battery. I'm still testing it so far so good.
+There are some detailed comparison but it looks to me multithread app snapdragon will win while m series is more focusing on single core performance. I cannot say which one is better but I prefer multi core since modern software are mostly structured as that.
+
+# Software
+Fast for sure, open the performance mode
+Most software can run. Warning should be given that some games might not run properly. 
+
+# Fix My Yarn
+aarch need to build many things on device (many package are not found). Found the error log and install the package:
+```
+apt install build-essential libpng-dev autoconf libtool
+```
+pin python version to < 3.10
+
