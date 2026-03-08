@@ -1,0 +1,46 @@
+---
+category: post
+title:  "❌Link Google Drive Image"
+date:   "2021-11-15"
+size: 4
+visible: 0
+---
+
+doesn't work anymore: Google has been progressively killing direct image serving from Drive. The lh3.googleusercontent.com/d/ trick is also unreliable now;
+
+# Problem
+
+Recently getting more and more lazy to organize images through blog folders. I know it has a lot of neat image caching/optimization features. Link to Google Drive seems to be a convenient way for me sometimes.
+
+Yet, haunted by this issue of converting:
+> https://drive.google.com/file/d/{ID}/view?usp=sharing
+
+to something that actually renders as an image.
+
+# Old Solution (Broken)
+
+The old trick was converting to:
+
+> https://drive.google.com/uc?export=view&id={ID}
+
+Google killed this. It no longer serves images directly. Don't use it.
+
+# New Solution
+
+The working format now is:
+
+> https://lh3.googleusercontent.com/d/{ID}
+
+So the Ultisnips snippet becomes:
+
+```
+snippet gimg "google image"
+![${0:${VISUAL}}](${1:`!v
+substitute(getreg("*"), "https://drive.google.com/file/d/\\(.*\\)/view.*", "https://lh3.googleusercontent.com/d/\\1", "g")
+`})
+endsnippet
+```
+
+Same idea — grabs the clipboard, strips the Drive share URL down to just the ID, and builds the `lh3.googleusercontent.com/d/{ID}` link. Feel free to tailor the line after `!v` to your need.
+
+Note: make sure the file is shared publicly ("Anyone with the link can view") in Google Drive, otherwise the image won't load.

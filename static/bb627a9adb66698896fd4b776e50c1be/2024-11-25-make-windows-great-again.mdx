@@ -1,0 +1,106 @@
+---
+category: post
+title:  "Unlock Real Windows"
+date:  "2024-11-25"
+size: 4
+visible: 1
+---
+
+Windows is (slow, power hog, rebooting, ) except gaming. Now let's fix it.
+
+# Why
+
+The last time I used Windows as my main laptop, I was left with the strong impression that it was mainly for games. Windows lacks a robust development environment, such as a shell, user administration, etc.. I switched to Linux but struggled for years to find a suitable Linux laptop because of poor Linux hardware driver (therefore low quality trackpad, fan, battery, sleep mode; they seems to only care about desktop). Eventually, I discovered that Macbook was a better alternative if I want to \*nix flavor, albeit not the most optimal solution. However, with the introduction of WSL(2) on Windows and reduced fan noise on ARM, I now feel that Windows is becoming my best Linux machine.
+
+So, this post discusses how to make Windows great again, specifically by transforming it into a capable Linux laptop.
+
+# Software (GUI)
+
+"Hey, you don't have apt-get or brew (sucks)!" Well, Scoop.sh is my choice of package manager. I actually only used it for the GUI. Remember, what really matters is the Linux terminal environment. However, we need GUI tools like a browser, media player, GIMP, etc. Scoop can be used for this purpose; it's like a replacement for `brew install --cask`.
+
+Since most of my work is done in the Linux Terminal, Scoop also serves as my bootstrap tool for Windows. Here's the [script](https://github.com/daizeng1984/dotfiles/blob/master/windows/installScoop.ps1) I used to install everything on Windows. What's nice is that, with the help of AutoHotkey, this setup also provides me with key/mouse mapping similar to that of Macbook. This way, when switching between Mac and Windows, I experience less muscle memory strain.
+
+# Auto Rebooting
+
+This is the most notorious and infamous **"bug"** that Windows has. When you are giving a presentation or have important work unsaved, Windows will do its best to interrupt your work if you don't stop it. Now we have a solution that allows you to take control. Open your command prompt with administrative rights and paste:
+
+```sh
+FOR %F IN ("%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~*.mum") DO (DISM /Online /NoRestart /Add-Package:"%F") 
+FOR %F IN ("%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~*.mum") DO (DISM /Online /NoRestart /Add-Package:"%F")
+```
+then go to Start Menu or `cmd` to run: `gpedit.msc` to open the Group Policy tool.
+
+Go to Computer Configuration > Administrative Templates > Windows Components > Windows Update > Configure Automatic Updates > Legacy Policies and find option "No autore-start with logged on users for scheduled automatic updates installations"
+
+Note: This policy applies only when Automatic Updates is configured to perform scheduled installations of updates. If the "Configure Automatic Updates" policy is disabled, this policy has no effect.
+
+So go to Administrative Templates > Windows Components > Windows Update > Manage end user experience > Configure Automatic Updates make sure this option is either not configured or **NOT** Disabled
+
+# Hardware
+
+Apple has become significantly cooler since the release of the M series. Fortunately, this year, things are set to change. With the introduction of the Snapdragon X Plus, we can now expect much longer battery life for Windows Laptop. I'm still testing it, and so far, so good. There are some detailed comparisons, but it seems to me that Snapdragon will win my preference due to its multicore performance, even though the M series appears to focus more on single-core performance. I can't definitively say which one is better (it's a trade-off), but I prefer multicore performance since the modern software I use in the terminal, like rg and fd, is mostly designed that way. It's blazing fast with such multicore capabilities.
+
+But just like on the day of the M1 Mac release, not all apps are compatible. You will definitely encounter some compatibility issues. I would not recommend using this laptop as a Windows gaming machine, not just for performance reasons, but also because there are reported incompatibilities due to poorly designed game anti-cheat executables. You can check app compatibility [here](https://www.worksonwoa.com/). 
+
+I strongly recommend the Surface Laptop 7 XPlus 13" (the one I'm using). You get a nice high refresh rate display, a premium trackpad (equivalent to a MacBook!), and a much nicer keyboard.
+
+# WSL
+WSL is one of the main reasons why Windows has become my preferred Linux OS, surpassing MacBook's Unix. On the MacBook, many terminal commands are not native arm64 versions, at least the last time I checked. However, WSL is aarch64 and has full native support! The reason for this is that ARM Linux has been around for a while. So far, I haven't encountered any compatibility issues. On my other gaming laptop with Windows and WSL, I can also use nvidia-smi and run GPU/LLM Python projects smoothly. That's truly incredible for me.
+
+## Fix My Gatsby
+But I have a small problem with an npm package because it is so old that it doesn't have an aarch64 build. In my case, aarch64 needs to build many components on device (many packages are missing) and has broken my old Gatsby setup. I need to found the error log and installed the necessary packages.
+```
+apt install build-essential libpng-dev autoconf libtool pkg-config
+```
+I also need to pin the Python version to < 3.10 because these packages are very old. I hesitate to upgrade it because everything breaks.
+
+# Misc Fixes
+If we like to push a bit further (more arm flavor and less bloaty and junk) to save more battery and perfectionism, we could do these:
+
+## Clean Up MS Bloatware
+Watch out when using debloater [Win-Debloat-Tools](https://github.com/LeDragoX/Win-Debloat-Tools). They are nice but for arm they might brick the machine. So here, we just pick one of the scripts to [disable services](https://github.com/daizeng1984/dotfiles/blob/master/windows/disableServices.ps1) which disable or manualize most services e.g. EdgeUpdate.
+
+I also [removed the ClickToRun services](https://github.com/daizeng1984/dotfiles/blob/master/windows/Delete_officeclicktorun.reg) because I don't/never use Office (use G Suite). ⚠ Don't do it if you don't know what you are doing.
+
+I also did a bit manual touch like:
+```
+Go to Programs & Features:
+
+Uninstall MS Office other region (why are they installed?)
+Uninstall Remote Desktop Connection (feeling insecure)
+
+Go to Edge Settings make it less evil (when you don't use it):
+Disable "Startup boost"
+Disable "Continue running background extensions and apps when Microsoft Edge is closed"
+
+Go to system > system components, to make them Never run in background:
+Phone Link, Game Bar
+```
+I really hope these OS maker would provide a convenient way to customize what you need in OS setup. Too many trackers or services we don't need.
+
+## Alacritty Arm64
+It's unfornately they are not releasing it for arm64, but you can build by yourself.
+First install cli build tools for win: https://visualstudio.microsoft.com/visual-cpp-build-tools/ make sure to check the arm64 components e.g. C++ VS 2017 for ARM64 (I checked all latest ARM64 version)
+Then install rust and llvm, I did in git bash or mingw:
+```sh
+scoop install main/rustup
+scoop install main/llvm-arm64
+```
+run `cargo --version` and `clang --version` to check if our install succeeds. go clone alacritty repo and:
+
+```sh
+cargo build --release
+```
+Result alacritty.exe should be in target folder.
+
+## MP3 Player
+Foobar2000 (I used to have it around 2000) have ARM64, just scoop install it.
+
+## MP4 Player
+VLC nightly shipped with arm64 is still not working! So I choose to use smplayer. For smplayer arm version, go github and download here: [smplayer-portable-24.5.0-arm64.7z](https://github.com/minnyres/smplayer-windows-arm64/releases/tag/v24.5.0/smplayer-portable-24.5.0-arm64.7z)
+
+## WSL Clip.exe Language Support
+When I copy Chinese or other utf character from wsl (which seems to use clip.exe), it convert my chinese character to something unrecognizable. The treatment is just [enabling the settings](https://github.com/microsoft/WSL/issues/4852#issuecomment-2112370926): time and language -> administrative language settings -> administrative -> change system locale -> check `Beta: Use Unicode UTF-8 for global language support` 
+
+# Overall
+If you work on Linux and spend most of your time in the terminal, I recommend using Windows with WSL. I know I just bought this during Black Friday, so it's still in the honeymoon phase. I'll continue using this favorite laptop and will keep posting if I find anything in the future.

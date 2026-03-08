@@ -1,0 +1,79 @@
+---
+category: post
+title: "The Probability Machine"
+date: "2026-02-16"
+size: 4
+visible: 1
+---
+
+The most powerful tool humans have ever created. And somehow we're still surprised by how powerful it is.
+
+# My Take: AI Is Still an Interpolator
+
+I've held this belief for a while and nothing so far has changed my mind — under the current LLM paradigm, AI cannot exceed human capability in true innovation and exploration.
+
+Here's the mental model I keep coming back to: picture all human knowledge as a set of distinct points scattered in a space. AI can *interpolate* between those existing points brilliantly. What it cannot do is *extrapolate* — place a brand new dot somewhere outside the cluster. That's still a human job. We shouldn't expect AI to lead us to the next interplanetary civilization. We still need humans in the driver's seat for that.
+
+Why do I think this? A few reasons:
+
+- **It's still a probability predictor trained on supervision.** There's no world model that lets AI self-explore and decide where it wants to go. We'd still see exponential growth if the model could self-improve at scale — we don't. And soon the internet will be flooded with AI-generated content that pollutes the very training data future models depend on. Closed loop, degrading signal.
+- **Trained toward "correct" answers.** AI lost the basic human instinct of genuine uncertainty. You'll never hear it say *"hmm, I'm not sure. This question is hard. What if we tried..."*. Every response is an answer, even when it shouldn't be. Open-ended exploration is basically impossible without an environment to search in — and that search space is almost infinite without quantum-scale compute.
+- **Probability chains compound failures.** Each LLM call in an agent chain might have 0.99 accuracy, but stack enough of them and 0.99ⁿ gets small fast. The longer the chain, the more you need a human in the loop to catch drift.
+
+Am I wrong? Maybe. World models and other directions are still being actively researched. Maybe soon we find the jewel God left behind — real silicon intelligence. But I'll believe it only when I see it.
+
+# What It Actually Does Well
+
+That said — don't undersell it either. Within the human knowledge circle, AI is *incredibly* good at:
+
+- **Coding assistance** — honestly transformative. It's a quite knowledgeable engineer who never sleeps and has read every Stack Overflow answer ever written.
+- **Fast knowledge processing** — ingest a whole codebase or a huge corpus and pull out what matters
+- **Knowledge pool** — the entire internet, on demand
+- **Suggestions and first drafts** — always gives you something to react to, which is often exactly what you need to unblock yourself
+
+Yes, there's hallucination. But if we keep improving that, AI becomes the best possible learning companion. Like a math student with a calculator. Like a writer with a brilliant (if occasionally confabulating) research assistant. SW engineers already have a new programming language: English. We just have to internalize that this tool is probabilistic, not deterministic. It sometimes fails. Change your mental model accordingly and it's still the most powerful thing we've ever had.
+
+# AI Is Changing the World Anyway
+
+The shift from prompt engineering 1.0 to *agentic engineering* (or context engineer whatever prompt engineering 2.0) is where things get real. Like when the web was first created — nobody could fully see what it would become. But you could feel the gravity of it.
+
+Agents that browse, code, book, purchase, negotiate — this is early but the direction is obvious. It's not science fiction anymore, it's engineering backlog.
+
+# The Job Moat Question
+
+As a SWE this year feels like a genuine pivot point. The stories are everywhere: "I built X in Y hours." Software gets cheaper each month. A coffee shop owner might vibe-code a CRM by themselves. That's real.
+
+But here's what actually nerves me — do we even need apps anymore? Can you just tell an agent what you want and let it finish? Log into your DMV account, pay the registration bill. Book a doctor. Call pest control based on your calendar. If agents can operate any UI on your behalf, the entire web frontend becomes optional.
+
+试想虚拟世界里，所有交互都通过agent完成。在亚马逊买东西只需要说"帮我买一个好用的枕头"，agent直接搞定。不需要打开App，不需要点击，亚马逊的价值变成了物流和信用，而不是那个界面。有流量入口和物理产品的平台（亚麻）反而更有前景。
+
+Under this scenario: most web app jobs have no moat. We'll need fewer engineers. The surviving SWEs will mostly be markdown writers, agent orchestrators, and reviewer-in-the-loops. Web PMs probably also disappear — in an agentic world, product decisions get collapsed into the agent's configuration.
+
+The jobs I *do* see surviving or growing:
+
+- **AI infra, close to hardware** — someone has to tune models to new chips and drivers. The closer you are to the metal, the harder the moat.
+- **Research and frontier exploration** — AI can *assist* research but cannot lead it. Depth of domain knowledge + focus on genuinely unsolved problems = safe.
+- **Physical world integration** — robots, autonomous driving, wearables, anything that bridges digital and physical. Hard problems that require patience.
+- **Connecting people** — social, metaverse, human-to-human stuff that agents can assist but can't replace. Though this one I'm less sure about as agents get better at simulating social dynamics.
+
+以前的互联网大厂会渐渐萎缩。有聪明的agent，我为什么要执着于在某个平台上？多平台或者分布式的内容会更有优势。Agent帮我看YouTube然后告诉我我需要知道和感兴趣的。广告也不需要了吧。
+
+## Tech Stack Predictions (for what it's worth)
+
+- **Web stack**: getting commoditized fast. Still needed, but way cheaper, way less headcount.
+- **Infra**: split. Hardware-adjacent and physical infra holds value. Pure software ops that can be automated — shrinks.
+- **AI model**: the new compiler. This is the productivity source for the era, like Boland C++ or GCC was for a previous one. First-gen LLMs maybe have a 10-year runway, then something better replaces them. Multimodal and 3D gen models still have room to grow.
+- **OS & Mobile**: going agent-first. No one will build UI anymore. Every app will expose an API to survive. OS becomes a permission and API manager.
+- **Robotics**: hot, hard, slow to consumer, but inevitable. This is probably the biggest physical-world bet.
+
+# 出路
+
+Given all this, where does that leave us?
+
+1. **Go where AI can't** — explore the points outside the existing knowledge circle. Frontier research. Unsolved physical problems. Anything requiring genuine creativity across disciplines.
+2. **Get closer to hardware and the physical world** — SW infra for robotics, autonomous driving, wearables. The further from the cloud, the safer.
+3. **Physical business** — owns atoms, not just bits. Harder to automate.
+
+And the flip-side thought: if AI is this good, why would a talented person join a company? If you have a real idea, the barrier to building it just dropped to near zero. The market will rebalance. People with big ideas and the execution instinct to match will do it themselves.
+
+The tool is here. Use it or get used by it.
